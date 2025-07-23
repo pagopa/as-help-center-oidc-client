@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# execute lint before commit
+npx lint-staged
+# execute type checks
+npm run type-check

@@ -6,7 +6,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default [
   {
-    ignores: ['dist', 'node_modules', 'build', 'tsconfig.json', 'jest.*.js', 'coverage'],
+    ignores: ['dist', 'node_modules', 'build', 'tsconfig.json', '.husky/install.mjs', 'jest.*.js', 'coverage'],
   },
   eslint.configs.recommended,
   {
