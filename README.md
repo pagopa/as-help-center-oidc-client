@@ -81,6 +81,9 @@ npm start
 - `npm start`: Starts the compiled application.
 - `npm run dev`: Starts the application in development mode using `nodemon`.
 - `npm run type-check`: Runs TypeScript type checking.
+- `lint`: Runs eslint checks,
+- `lint:fix`: Run eslint and fix all errors,
+- `format`: Runs prettier to format files
 
 \
 <br/>
