@@ -21,6 +21,9 @@ This project implements an OpenID Connect (OIDC) client to handle authentication
 <br/>
 ![sequence](docs/architecture/sequence_diagram.svg)
 
+**CI/CD pipeline**\
+The project is managed via a CI/CD pipeline that ensures code integrity and efficient deployment. Key features include: code validation for every pull request, automatic deployment and infrastructure update (IaC).
+
 ### Main technologies used
 
 - Express
@@ -77,3 +80,36 @@ npm start
 - `npm start`: Starts the compiled application.
 - `npm run dev`: Starts the application in development mode using `nodemon`.
 - `npm run type-check`: Runs TypeScript type checking.
+
+\
+<br/>
+
+## Contributing
+
+We use [conventional commits](https://conventionalcommits.org/) to improve readability of the project history and to automate the release process. The commit message should therefore respect the following format:
+
+```
+<type>[optional scope/task]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- type: describes the category of the change. See [supported types](docs/extendings/commit-types.md).
+- scope/task: (optional) describes what is affected by the change
+- description: a small description of the change
+- body: (optional) additional contextual information about the change
+- footer: (optional) adds external links, references and other meta-information
+
+i.e.:
+
+```
+chore: automate release
+fix(routes): fix auth route path
+feat(CACI-101): add zod validation
+```
+
+We use [husky](https://github.com/typicode/husky) and [commitlint](https://github.com/conventional-changelog/commitlint) to validate messages when commiting.
+
+We use [Github actions](https://github.com/features/actions) together with [semantic-release](https://github.com/semantic-release/semantic-release) to release a new version once a PR gets merged into main branch. To achieve this, there is also a check for the [Branch and Pull Request name](docs/extendings/branch-pr-name.md)
