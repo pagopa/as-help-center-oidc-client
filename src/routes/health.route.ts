@@ -1,4 +1,3 @@
-
 import express, { Request, Response } from 'express';
 import * as oidcClient from '@services/oidcClient.service';
 
@@ -11,9 +10,9 @@ healthRouter.get('', (_req: Request, res: Response) => {
       status: 'healthy',
       timestamp: new Date().toISOString(),
       services: {
-        oidc: oidcIsInitialized ? 'initialized' : 'not initialized'
+        oidc: oidcIsInitialized ? 'initialized' : 'not initialized',
       },
-      uptime: process.uptime()
+      uptime: process.uptime(),
     };
 
     res.status(oidcIsInitialized ? 200 : 503).json(statusRes);
@@ -22,7 +21,7 @@ healthRouter.get('', (_req: Request, res: Response) => {
     res.status(500).json({
       status: 'unhealthy',
       error: 'Unable to get server status',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });

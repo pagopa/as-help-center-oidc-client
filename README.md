@@ -11,6 +11,7 @@
    - [Available scripts](#available-scripts)
 
 ## What is?
+
 This project implements an OpenID Connect (OIDC) client to handle authentication and authorization between the [PagoPA Help Center (CAC)](https://github.com/pagopa/as-help-center) and [One Identity](https://github.com/pagopa/oneidentity).
 
 ## Architecture
@@ -21,6 +22,7 @@ This project implements an OpenID Connect (OIDC) client to handle authentication
 ![sequence](docs/architecture/sequence_diagram.svg)
 
 ### Main technologies used
+
 - Express
 - Typescript
 - Dotenv

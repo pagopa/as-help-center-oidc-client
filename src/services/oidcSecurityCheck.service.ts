@@ -9,7 +9,7 @@ const JWT_ALGORITHM = 'HS256';
 type ExtraStateData = {
   return_to_url: string;
   contact_email: string;
-}
+};
 
 // create new state and nonce
 // state will be a jwt signed token in order maintain code stateless (state token will be verified between different api calls)
@@ -23,15 +23,14 @@ export function createStateAndNonce(extraStateData?: ExtraStateData) {
     createdAt: new Date().toISOString(),
     stateValue,
     nonce,
-    ...(extraStateData 
-      ? {return_to_url: extraStateData.return_to_url, contact_email: extraStateData.contact_email} 
-      : {}
-    )
+    ...(extraStateData
+      ? { return_to_url: extraStateData.return_to_url, contact_email: extraStateData.contact_email }
+      : {}),
   };
 
   const state = jwt.sign(statePayload, STATE_TOKEN_SECRET, {
     expiresIn: STATE_TOKEN_EXPIRING,
-    algorithm: JWT_ALGORITHM
+    algorithm: JWT_ALGORITHM,
   });
 
   return { state, nonce };
@@ -48,6 +47,7 @@ export function validateAndGetState(state?: string) {
     console.log('State JWT valido:', statePayload);
     return statePayload;
   } catch (jwtError) {
+    console.error('JWT validation error:', jwtError);
     throw new Error('State is not valid');
   }
 }

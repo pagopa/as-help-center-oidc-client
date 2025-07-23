@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 
 // 404 handler middleware
 // TODO refactor with res.redirect -> not found page
