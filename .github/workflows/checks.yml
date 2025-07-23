@@ -10,6 +10,21 @@ on:
 
 jobs:
   # only pr on main branch
+  check-pr-title:
+    name: Check PR title
+    if: github.event.pull_request.user.login != 'renovate-pagopa[bot]'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+
+      # check pr title with pattern "^(feat|refactor|fix|docs)(\([^)]*\))?: .+$"
+      - name: Check PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          ./scripts/check-pr-name.sh "$PR_TITLE"
+
   lint-and-test:
     name: Lint and test files
     runs-on: ubuntu-22.04
