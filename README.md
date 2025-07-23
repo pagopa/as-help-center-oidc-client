@@ -9,6 +9,7 @@
    - [Configuration](#configuration)
    - [Run the application](#run-the-application)
    - [Available scripts](#available-scripts)
+4. [Contributing](#contributing)
 
 ## What is?
 
