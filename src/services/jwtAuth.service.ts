@@ -13,7 +13,7 @@ export function generateAuthJwt(name?: string, fiscalNumber?: string, org?: stri
     email: emailContact,
     organization: org,
     // user_fields: { email_contact: emailContact, fiscalcode: fiscalNumber },
-    user_fields: { fiscalcode: fiscalNumber },
+    user_fields: { aux_data: fiscalNumber },
   };
   // encode
   return jwt.sign(payload, config.authJwt.secret, {
