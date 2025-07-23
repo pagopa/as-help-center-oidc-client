@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                                  
+    "module": "commonjs",                                
+    "baseUrl": "./",                                     
+    "paths": {
+      "@services/*": ["src/services/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@routes/*": ["src/routes/*"],
+      "@config/*": ["src/config/*"],
+    },                                                 
+    "outDir": "./dist",                                
+    "esModuleInterop": true,                           
+    "forceConsistentCasingInFileNames": true,          
+    "strict": true,                                    
+    "noImplicitAny": true,                            
+    "strictNullChecks": true,                         
+    "strictFunctionTypes": true,                      
+    "skipLibCheck": true                              
+  }
+}

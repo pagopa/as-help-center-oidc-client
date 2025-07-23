@@ -1,0 +1,23 @@
+sequenceDiagram
+  participant User as User (Help Center FE)
+  participant Zendesk as Zendesk (SSO)
+  participant Proxy as OIDC Client
+  participant OneID as One Identity
+  participant SPIDCIE as SPID/CIE
+
+  User ->> Zendesk: Click "Login" button
+  Zendesk ->> Proxy: Redirect to /login
+  Note over Proxy,SPIDCIE: Start OIDC flow (user authentication through IDP)
+  Proxy ->> OneID: Redirect to OneID /login
+  OneID ->> SPIDCIE: Redirect to IdP (SPID/CIE)
+  SPIDCIE -->> OneID: User authenticated
+  OneID -->> Proxy: Redirect with code to /callback
+  Proxy ->> OneID: Exchange code at /token
+  OneID -->> Proxy: Return ID Token + Access Token
+  Note over Proxy,SPIDCIE: End OIDC flow (user authentication through IDP)
+  Proxy ->> Proxy: Create JWT Token for Zendesk
+  Proxy -->> Zendesk: Redirect with JWT code
+  Note over Zendesk,Zendesk: User logged in
+  Zendesk -->> User: Redirect to Help Center FE (return_to)
+
+
