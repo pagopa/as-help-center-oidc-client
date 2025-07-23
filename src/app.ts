@@ -26,7 +26,7 @@ function startServer(): void {
   try {
     // OIDC client initialization
     oidcClient.getClientOrInitialize();
-    
+
     // Start server
     app.listen(config.server.port, () => {
       console.log(`Server running on ${config.server.host}`);

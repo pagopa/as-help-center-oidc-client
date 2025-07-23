@@ -1,0 +1,58 @@
+name: Checks
+# Workflow that checks the pull request name and runs code linting every time a pull request is opened, edited, or synchronized.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  # only pr on main branch
+  check-pr-title:
+    name: Check PR title
+    if: github.event.pull_request.user.login != 'renovate-pagopa[bot]'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+
+      # check pr title with pattern "^(feat|refactor|fix|docs)(\([^)]*\))?: .+$"
+      - name: Check PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          ./scripts/check-pr-name.sh "$PR_TITLE"
+
+  lint-and-test:
+    name: Lint and test files
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.pull_request.base.ref == 'main' }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+
+      # call common node setup workflow
+      - name: Node setup
+        id: node-setup
+        uses: ./.github/workflows/node-setup
+        with:
+          node-version-file: '.nvmrc'
+
+      # start lint checking (eslint and prettier)
+      - name: Lint
+        id: lint-check
+        run: npm run lint
+
+      # run TypeScript type checking
+      - name: TypeScript type checking
+        id: type-check
+        run: npm run type-check
+
+      # TODO add tests
+      # run unit tests
+      # - name: Unit tests
+      #   id: unit-tests
+      #   run: npm run test

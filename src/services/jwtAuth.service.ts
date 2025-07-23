@@ -1,4 +1,4 @@
-import config from "@config/env";
+import config from '@config/env';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,11 +13,11 @@ export function generateAuthJwt(name?: string, fiscalNumber?: string, org?: stri
     email: emailContact,
     organization: org,
     // user_fields: { email_contact: emailContact, fiscalcode: fiscalNumber },
-    user_fields: { fiscalcode: fiscalNumber },
+    user_fields: { aux_data: fiscalNumber },
   };
   // encode
   return jwt.sign(payload, config.authJwt.secret, {
-      expiresIn: config.authJwt.expiring,
-      algorithm: JWT_SIGN_ALGORITHM
-    });
+    expiresIn: config.authJwt.expiring,
+    algorithm: JWT_SIGN_ALGORITHM,
+  });
 }

@@ -16,12 +16,12 @@ authRouter.get('/login', requireOIDC(), (req, res) => {
 
     // TODO add zod
     const return_to = new URL(req.query.return_to as string);
-    const emailContact = return_to.searchParams.get("contact_email");
-    return_to.searchParams.delete("contact_email");
+    const emailContact = return_to.searchParams.get('contact_email');
+    return_to.searchParams.delete('contact_email');
 
     const { state, nonce } = securityCheckManager.createStateAndNonce({
       return_to_url: return_to.toString(),
-      contact_email: emailContact!
+      contact_email: emailContact!,
     });
     const authUrl = oidcClient.generateAuthUrl(state, nonce);
 
@@ -29,7 +29,7 @@ authRouter.get('/login', requireOIDC(), (req, res) => {
     res.redirect(authUrl);
   } catch (error: unknown) {
     console.error('Login error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Login initialization failed',
     });
   }
@@ -47,7 +47,7 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
     if (error) {
       console.error('OIDC Provider error:', error, error_description);
       res.status(400).json({
-        error: 'Authorization failed', 
+        error: 'Authorization failed',
       });
     }
 
@@ -65,9 +65,9 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
     }
 
     // Exchange code with tokens
-    const { idToken, claims } = await oidcClient.handleCallback(params, {
+    const { claims } = await oidcClient.handleCallback(params, {
       state,
-      nonce: statePayload?.nonce
+      nonce: statePayload?.nonce,
     });
 
     console.log(statePayload?.contact_email, statePayload?.return_to_url);
@@ -85,8 +85,8 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
     const jwtAccess = JwtAuthService.generateAuthJwt(
       `${claims.name} ${claims.familyName}`,
       claims.fiscalNumber as string | undefined,
-      "_users_hc_cac", // TODO: what we need to include
-      statePayload?.contact_email
+      '_users_hc_cac', // TODO: what we need to include
+      statePayload?.contact_email,
     );
     // TODO: add loading spinner replacing h1
     res.send(`
@@ -103,15 +103,15 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
     `);
   } catch (error: unknown) {
     console.error('Callback error:', error);
-    res.status(500).json({ 
-      error: 'Login completion failed'
+    res.status(500).json({
+      error: 'Login completion failed',
     });
   }
 });
 
 // logout endpoint
-authRouter.get("/logout", (req, res) => {
-  console.log("Logout: " + JSON.stringify(req.query));
+authRouter.get('/logout', (req, res) => {
+  console.log('Logout: ' + JSON.stringify(req.query));
   // TODO: error redirect
   // if (req.query.message !== 'ok message') {
   //   res.redirect('https://assistenza.ioapp.it/hc/it/wiediwekdwe');

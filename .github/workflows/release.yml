@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    # don't execute action if pushed files are one of these or their combination
+    # to skip action execution after that the git release pushes new changelog and new version
+    paths-ignore:
+      - CHANGELOG.md
+      - package-lock.json
+      - package.json
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  # TODO code deploy action (lambda)
+  # TODO: infra action
+
+  # release git
+  git-release:
+    runs-on: ubuntu-22.04
+    # run only if the workflow was triggered by a push event, and not manually
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+        with:
+          persist-credentials: false
+
+      # call common node setup workflow
+      - name: Node setup
+        id: node-setup
+        uses: ./.github/workflows/node-setup
+        with:
+          node-version-file: '.nvmrc'
+
+      # Create a release
+      - name: Release
+        id: semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: ${{ secrets.RELEASE_BOT_GIT_NAME }}
+          GIT_AUTHOR_EMAIL: ${{ secrets.RELEASE_BOT_GIT_EMAIL }}
+          GIT_COMMITTER_NAME: ${{ secrets.RELEASE_BOT_GIT_NAME }}
+          GIT_COMMITTER_EMAIL: ${{ secrets.RELEASE_BOT_GIT_EMAIL }}

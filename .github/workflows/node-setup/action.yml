@@ -1,0 +1,24 @@
+name: Node Setup
+description: 'Setup node with correct version and install required dependencies (using cache)'
+
+inputs:
+  node-version-file:
+    description: 'Path to the .nvmrc file'
+    type: string
+    default: '.nvmrc'
+
+runs:
+  using: 'composite'
+  steps:
+    # Setup node version based on .nvmrc file and using cache
+    - name: Setup node version
+      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      with:
+        node-version-file: ${{ inputs.node-version-file }}
+        cache: 'npm'
+        cache-dependency-path: 'package-lock.json'
+
+    # Install npm dependencies
+    - name: Install dependencies
+      shell: bash
+      run: npm ci

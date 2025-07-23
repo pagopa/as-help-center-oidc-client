@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# check branch name before checkout
+bash scripts/check-branch-name.sh
