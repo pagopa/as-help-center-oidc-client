@@ -4,6 +4,7 @@ import * as oidcClient from '@services/oidcClient.service';
 import { requireOIDC } from '@middlewares/requireOIDC';
 import * as JwtAuthService from '@services/jwtAuth.service';
 import config from '@config/env';
+import { loginFormAutoSubmit, logoutRedirect } from 'src/utils/zendeskRedirect';
 
 const authRouter = express.Router();
 
@@ -88,19 +89,8 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
       '_users_hc_cac', // TODO: what we need to include
       statePayload?.contact_email,
     );
-    // TODO: add loading spinner replacing h1
-    res.send(`
-      <html>
-        <body>
-          <h1>Loading - User authentication via SPID/CIE...</h1>
-          <form id="jwtForm" method="POST" action="${config.authJwt.loginActionEndpoint}">
-            <input id="jwtString" type="hidden" name="jwt" value="${jwtAccess}" />
-            <input id="returnTo" type="hidden" name="return_to" value="${statePayload?.return_to_url}" />
-          </form>
-          <script>window.onload = () => { document.forms["jwtForm"].submit() }</script>
-        </body>
-      </html>
-    `);
+    console.log('jwtAccess', jwtAccess);
+    res.send(loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload?.return_to_url));
   } catch (error: unknown) {
     console.error('Callback error:', error);
     res.status(500).json({
@@ -116,17 +106,7 @@ authRouter.get('/logout', (req, res) => {
   // if (req.query.message !== 'ok message') {
   //   res.redirect('https://assistenza.ioapp.it/hc/it/wiediwekdwe');
   // }
-  res.send(`
-      <html>
-        <head>
-          <meta http-equiv="refresh" content="3;url=${req.query.return_to}" />
-        </head>
-        <body>
-        <p>[DEBUG ENABLED]: ${req.query.kind} - ${req.query.message}</p>
-        <p>You will be redirected in 5 seconds...</p>
-        </body>
-      </html>
-    `);
+  res.send(logoutRedirect((req.query.return_to as string) || config.cac.homeUrl));
 });
 
 export { authRouter, oidcClient };

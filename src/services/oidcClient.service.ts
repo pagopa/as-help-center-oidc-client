@@ -8,7 +8,6 @@ let client: Client;
 export function getClientOrInitialize() {
   try {
     if (!client) {
-      // TODO: discover? with oneid we will have only issuer with discovery or all endpoints?
       // const issuer = await Issuer.discover(process.env.OIDC_ISSUER);
       const issuer = new Issuer({
         issuer: config.oidc.issuer,
