@@ -13,7 +13,8 @@ export default {
   authJwt: {
     secret: process.env.AUTH_JWT_SECRET || crypto.randomBytes(16).toString('hex'),
     expiring: Number(process.env.AUTH_JWT_EXP) || 60 * 3, // 3m // TODO: check expiring zendesk (if default ecc)
-    loginActionEndpoint: process.env.JWT_LOGIN_ACTION_ENDPOINT,
+    loginActionEndpoint:
+      process.env.JWT_LOGIN_ACTION_ENDPOINT ?? throwMissingRequiredEnvVar('JWT_LOGIN_ACTION_ENDPOINT'),
   },
 
   stateJwt: {
@@ -22,9 +23,9 @@ export default {
   },
 
   oidc: {
-    issuer: process.env.OIDC_ISSUER || 'https://live-seriously-ghoul.ngrok-free.app/realms/zendesk-test',
-    clientId: process.env.OIDC_CLIENT_ID || 'zendesk-client',
-    clientSecret: process.env.OIDC_CLIENT_SECRET || 'KaaQFNwZpKDtY1RsezGv64HtKt5U8wWc',
+    issuer: process.env.OIDC_ISSUER ?? throwMissingRequiredEnvVar('OIDC_ISSUER'),
+    clientId: process.env.OIDC_CLIENT_ID ?? throwMissingRequiredEnvVar('OIDC_CLIENT_ID'),
+    clientSecret: process.env.OIDC_CLIENT_SECRET,
     scopes: buildOidcScopes(),
     endpoints: {
       authorize: process.env.OIDC_AUTHORIZE_ENDPOINT || '/oidc/authorize',
@@ -33,9 +34,17 @@ export default {
       jwks: process.env.OIDC_JWKS_ENDPOINT || '/oidc/keys',
     },
   },
+
+  cac: {
+    homeUrl: process.env.CAC_HOME_URL || 'https://centroassistenza.pagopa.it/hc/it',
+  },
 };
 
 function buildOidcScopes() {
   const scopesCommaSeparated = process.env.OIDC_SCOPES || 'openid';
   return scopesCommaSeparated.split(',').map((s) => s.trim()); // ['openid', 'email', 'profile']
+}
+
+function throwMissingRequiredEnvVar(varName: string): never {
+  throw new Error(`Missing required env var: ${varName}`);
 }
