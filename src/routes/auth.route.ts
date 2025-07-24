@@ -5,6 +5,7 @@ import { requireOIDC } from '@middlewares/requireOIDC';
 import * as JwtAuthService from '@services/jwtAuth.service';
 import config from '@config/env';
 import { loginFormAutoSubmit, logoutRedirect } from 'src/utils/zendeskRedirect';
+import { getErrorPageFromReturnTo } from 'src/utils/brandUtils';
 
 const authRouter = express.Router();
 
@@ -89,7 +90,6 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
       '_users_hc_cac', // TODO: what we need to include
       statePayload?.contact_email,
     );
-    console.log('jwtAccess', jwtAccess);
     res.send(loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload?.return_to_url));
   } catch (error: unknown) {
     console.error('Callback error:', error);
@@ -101,11 +101,11 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
 
 // logout endpoint
 authRouter.get('/logout', (req, res) => {
-  console.log('Logout: ' + JSON.stringify(req.query));
-  // TODO: error redirect
-  // if (req.query.message !== 'ok message') {
-  //   res.redirect('https://assistenza.ioapp.it/hc/it/wiediwekdwe');
-  // }
+  if (req.query.kind === 'error') {
+    console.error('Logout error', req.query.message);
+    res.redirect(getErrorPageFromReturnTo(req.query.return_to as string));
+    return;
+  }
   res.send(logoutRedirect((req.query.return_to as string) || config.cac.homeUrl));
 });
 
