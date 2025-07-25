@@ -5,7 +5,8 @@ import { requireOIDC } from '@middlewares/requireOIDC';
 import * as JwtAuthService from '@services/jwtAuth.service';
 import config from '@config/env';
 import { loginFormAutoSubmit, logoutRedirect } from 'src/utils/zendeskRedirect';
-import { getErrorPageFromReturnTo } from 'src/utils/brandUtils';
+import { getErrorPageFromReturnTo, sanitizedReturnTo } from 'src/utils/brandUtils';
+import { sanitizeLogMessage } from 'src/utils/utils';
 
 const authRouter = express.Router();
 
@@ -102,11 +103,11 @@ authRouter.get('/callback', requireOIDC(), async (req, res) => {
 // logout endpoint
 authRouter.get('/logout', (req, res) => {
   if (req.query.kind === 'error') {
-    console.error('Logout error', req.query.message);
+    console.error(`Logout error: "${sanitizeLogMessage(req.query.message)}"`);
     res.redirect(getErrorPageFromReturnTo(req.query.return_to as string));
     return;
   }
-  res.send(logoutRedirect((req.query.return_to as string) || config.cac.homeUrl));
+  res.send(logoutRedirect(sanitizedReturnTo(req.query.return_to as string)));
 });
 
 export { authRouter, oidcClient };
