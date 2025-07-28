@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.0.0...v1.1.0) (2025-07-28)
+
+
+### Features
+
+* redirect loading spinner and logout handling ([#2](https://github.com/pagopa/as-help-center-oidc-client/issues/2)) ([59f4ba1](https://github.com/pagopa/as-help-center-oidc-client/commit/59f4ba1b457ec4ca851c0f0f77ef93ca0b638c13))
+
 # 1.0.0 (2025-07-23)
 
 
