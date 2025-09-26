@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
 import crypto from 'crypto';
+import { NODE_ENV_VALUES } from '@utils/constants';
 dotenv.config();
 
 export default {
   server: {
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'https://slightly-intent-louse.ngrok-free.app',
-    environment: process.env.NODE_ENV || 'development',
+    environment: process.env.NODE_ENV || NODE_ENV_VALUES.development,
     clientRedirectUri: `${process.env.HOST}/auth/callback`,
   },
 

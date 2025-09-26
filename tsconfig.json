@@ -8,6 +8,7 @@
       "@middlewares/*": ["src/middlewares/*"],
       "@routes/*": ["src/routes/*"],
       "@config/*": ["src/config/*"],
+      "@errors/*": ["src/errors/*"],
       "@utils/*": ["src/utils/*"],
     },                                                 
     "outDir": "./dist",                                
