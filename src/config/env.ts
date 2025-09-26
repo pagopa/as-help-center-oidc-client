@@ -12,7 +12,6 @@ export default {
 
   authJwt: {
     secret: process.env.AUTH_JWT_SECRET || crypto.randomBytes(16).toString('hex'),
-    expiring: Number(process.env.AUTH_JWT_EXP) || 60 * 3, // 3m // TODO: check expiring zendesk (if default ecc)
     loginActionEndpoint:
       process.env.JWT_LOGIN_ACTION_ENDPOINT ?? throwMissingRequiredEnvVar('JWT_LOGIN_ACTION_ENDPOINT'),
   },

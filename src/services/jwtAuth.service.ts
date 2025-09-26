@@ -16,8 +16,8 @@ export function generateAuthJwt(name?: string, fiscalNumber?: string, org?: stri
     user_fields: { aux_data: fiscalNumber },
   };
   // encode
+  // expiring is automatically set by zendesk (and can be changed - from 5 minutes to 2 weeks)
   return jwt.sign(payload, config.authJwt.secret, {
-    expiresIn: config.authJwt.expiring,
     algorithm: JWT_SIGN_ALGORITHM,
   });
 }
