@@ -4,9 +4,9 @@ import * as oidcClient from '@services/oidcClient.service';
 import { requireOIDC } from '@middlewares/requireOIDC';
 import * as JwtAuthService from '@services/jwtAuth.service';
 import config from '@config/env';
-import { loginFormAutoSubmit, logoutRedirect } from 'src/utils/zendeskRedirect';
-import { getErrorPageFromReturnTo, sanitizedReturnTo } from 'src/utils/brandUtils';
-import { sanitizeLogMessage } from 'src/utils/utils';
+import { loginFormAutoSubmit, logoutRedirect } from '@utils/zendeskRedirect';
+import { getErrorPageFromReturnTo, sanitizedReturnTo } from '@utils/brandUtils';
+import { sanitizeLogMessage } from '@utils/utils';
 
 const authRouter = express.Router();
 
