@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.1.0...v1.2.0) (2025-10-01)
+
+
+### Features
+
+* remove auth jwt expiring, zendesk handle the expiring ([#3](https://github.com/pagopa/as-help-center-oidc-client/issues/3)) ([383d8dc](https://github.com/pagopa/as-help-center-oidc-client/commit/383d8dcc1ae02618b4b012280053aae88d437f4c))
+
 # [1.1.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.0.0...v1.1.0) (2025-07-28)
 
 
