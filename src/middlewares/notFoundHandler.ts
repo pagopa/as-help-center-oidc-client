@@ -1,7 +1,8 @@
+import { ApiError } from '@errors/ApiError';
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-// 404 handler middleware
-// TODO refactor with res.redirect -> not found page
-export function notFoundHandler(req: Request, res: Response, _next: NextFunction) {
-  res.status(404).json({ error: 'Service not found' });
+// Route not found - 404 handler middleware
+export function notFoundHandler(_req: Request, _res: Response, next: NextFunction) {
+  next(new ApiError('Route not found', StatusCodes.NOT_FOUND));
 }
