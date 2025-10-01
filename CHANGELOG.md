@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.2.0...v1.3.0) (2025-10-01)
+
+
+### Features
+
+* error handler ([#4](https://github.com/pagopa/as-help-center-oidc-client/issues/4)) ([087d6be](https://github.com/pagopa/as-help-center-oidc-client/commit/087d6beb3bef3408432b8e995583d7227ac15994))
+
 # [1.2.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.1.0...v1.2.0) (2025-10-01)
 
 
