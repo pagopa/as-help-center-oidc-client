@@ -1,8 +1,11 @@
 import config from '@config/env';
 
-export const getErrorPageFromReturnTo = (returnTo: string) => {
-  const baseUrl = returnTo ? new URL(returnTo).origin : config.cac.homeUrl;
-  return `${baseUrl}/generic-error`;
+// TODO: add generic error and allowedOrigins in env.ts
+
+export const getErrorPageFromReturnTo = (returnTo: string, errorPage?: string): string => {
+  const safeUrl = sanitizedReturnTo(returnTo);
+  const baseUrl = new URL(safeUrl).origin;
+  return `${baseUrl}/${errorPage || 'generic-error'}`;
 };
 
 const isValidReturnTo = (url: string): boolean => {
