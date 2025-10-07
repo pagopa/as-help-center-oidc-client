@@ -1,29 +1,9 @@
-import express, { Request, Response } from 'express';
-import * as oidcClient from '@services/oidcClient.service';
+import { Router } from 'express';
+import * as healthController from '@controllers/health.controller';
 
-const healthRouter = express.Router();
+const router = Router();
+const prefix = '/health';
 
-healthRouter.get('', (_req: Request, res: Response) => {
-  try {
-    const oidcIsInitialized = oidcClient.isInitialized();
-    const statusRes = {
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-      services: {
-        oidc: oidcIsInitialized ? 'initialized' : 'not initialized',
-      },
-      uptime: process.uptime(),
-    };
+router.get('', healthController.healthCheck);
 
-    res.status(oidcIsInitialized ? 200 : 503).json(statusRes);
-  } catch (error: unknown) {
-    console.error(error);
-    res.status(500).json({
-      status: 'unhealthy',
-      error: 'Unable to get server status',
-      timestamp: new Date().toISOString(),
-    });
-  }
-});
-
-export default healthRouter;
+export default { router, prefix };
