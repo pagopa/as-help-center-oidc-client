@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.3.0...v1.4.0) (2025-10-07)
+
+
+### Features
+
+* add controller layer ([#5](https://github.com/pagopa/as-help-center-oidc-client/issues/5)) ([1f8246f](https://github.com/pagopa/as-help-center-oidc-client/commit/1f8246f525727f15b2c9441546de6b1164756021))
+
 # [1.3.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.2.0...v1.3.0) (2025-10-01)
 
 
