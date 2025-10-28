@@ -27,6 +27,7 @@ export default {
     clientId: process.env.OIDC_CLIENT_ID ?? throwMissingRequiredEnvVar('OIDC_CLIENT_ID'),
     clientSecret: process.env.OIDC_CLIENT_SECRET,
     scopes: buildOidcScopes(),
+    responseType: process.env.OIDC_RESPONSE_TYPE || 'code',
     endpoints: {
       authorize: process.env.OIDC_AUTHORIZE_ENDPOINT || '/oidc/authorize',
       token: process.env.OIDC_TOKEN_ENDPOINT || 'login',

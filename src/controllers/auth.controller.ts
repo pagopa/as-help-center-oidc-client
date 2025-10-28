@@ -5,26 +5,23 @@ import * as JwtAuthService from '@services/jwtAuth.service';
 import config from '@config/env';
 import { loginFormAutoSubmit } from '@utils/zendeskRedirect';
 import { getErrorPageFromBrandId, sanitizedReturnTo } from '@utils/brandUtils';
-import { LogoutReqParam } from '@dtos/auth/logout.dto';
 import { sanitizeLogMessage } from '@utils/utils';
 import { ApiError } from '@errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
+import { LogoutReqParam } from '@dtos/auth/logout.dto';
+import { LoginReqParam } from '@dtos/auth/login.dto';
 
-export const login = async (req: Request, res: Response) => {
-  console.log('qp login:', req.query);
+export const login = async (req: Request<{}, {}, {}, LoginReqParam>, res: Response) => {
+  const { return_to, contact_email } = req.query;
 
-  // TODO add zod
-  const return_to = new URL(req.query.return_to as string);
-  const emailContact = return_to.searchParams.get('contact_email');
-  return_to.searchParams.delete('contact_email');
-
+  // generate state and nonce
   const { state, nonce } = securityCheckManager.createStateAndNonce({
-    return_to_url: return_to.toString(),
-    contact_email: emailContact!,
+    return_to_url: return_to,
+    contact_email: contact_email,
   });
+  // generate authUrl
   const authUrl = oidcClient.generateAuthUrl(state, nonce);
-
-  console.log('Redirect to:', authUrl);
+  // redirect fe to generated authUrl
   res.redirect(authUrl);
 };
 

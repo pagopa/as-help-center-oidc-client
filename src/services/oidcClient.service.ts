@@ -32,13 +32,14 @@ export function getClientOrInitialize() {
 }
 
 // generate oidc authorize url
-export function generateAuthUrl(state: string, nonce: string, additionalParams: Record<string, any> = {}) {
+export function generateAuthUrl(state: string, nonce: string, additionalParams: Record<string, any> = {}): string {
+  // TODO: remove
   // const client = getClientOrInitialize();
   return client.authorizationUrl({
     scope: config.oidc.scopes.join(' '),
     state,
     nonce,
-    response_type: 'code',
+    response_type: config.oidc.responseType,
     ...additionalParams,
   });
 }
