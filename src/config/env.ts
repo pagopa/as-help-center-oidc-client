@@ -5,7 +5,7 @@ dotenv.config();
 
 export default {
   server: {
-    port: process.env.PORT || 3000,
+    port: Number(process.env.PORT) || 3000,
     host: process.env.HOST || 'https://slightly-intent-louse.ngrok-free.app',
     environment: process.env.NODE_ENV || NODE_ENV_VALUES.development,
     clientRedirectUri: `${process.env.HOST}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
