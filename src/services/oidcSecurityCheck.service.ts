@@ -1,7 +1,7 @@
 import config from '@config/env';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { generators } from 'openid-client';
-import { ExtraStateData, StateAndNonce } from 'src/types/auth.types';
+import { ExtraStateData, StateAndNonce, StateJwtPayload } from 'src/types/auth.types';
 
 const STATE_TOKEN_SECRET = config.stateJwt.secret;
 const STATE_TOKEN_EXPIRING = config.stateJwt.expiring;
@@ -31,14 +31,13 @@ export function createStateAndNonce(extraStateData: ExtraStateData): StateAndNon
 }
 
 // validate the token state and return the payload
-export function validateAndGetState(state?: string) {
+export function validateAndGetState(state?: string): StateJwtPayload {
   if (!state) {
     throw new Error('State parameter is required');
   }
 
   try {
-    const statePayload = jwt.verify(state, STATE_TOKEN_SECRET) as JwtPayload; // TODO: custom type
-    console.log('State JWT valido:', statePayload);
+    const statePayload = jwt.verify(state, STATE_TOKEN_SECRET) as StateJwtPayload;
     return statePayload;
   } catch (jwtError) {
     console.error('JWT validation error:', jwtError);

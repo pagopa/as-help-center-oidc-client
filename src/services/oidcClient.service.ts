@@ -1,6 +1,8 @@
-import { Client, Issuer } from 'openid-client';
+import { CallbackParamsType, Client, Issuer } from 'openid-client';
 import config from '@config/env';
 import { Request } from 'express';
+import { CallbackReqParam } from '@dtos/auth/callback.dto';
+import { ExchangedTokenSet } from 'src/types/auth.types';
 
 let client: Client;
 
@@ -45,24 +47,23 @@ export function generateAuthUrl(state: string, nonce: string, additionalParams: 
 }
 
 // handle callback and exchange auth code with tokens
-// TODO dare il tipo a claims
-export async function handleCallback(callbackParams: Record<string, any>, checks: { state?: string; nonce?: string }) {
-  try {
-    // const client = getClientOrInitialize();
-    const tokenSet = await client.callback(config.server.clientRedirectUri, callbackParams, checks);
+export async function handleCallback(
+  callbackParams: CallbackParamsType,
+  checks: { state?: string; nonce?: string },
+): Promise<ExchangedTokenSet> {
+  // TODO: remove
+  // const client = getClientOrInitialize();
+  const tokenSet = await client.callback(config.server.clientRedirectUri, callbackParams, checks);
 
-    return {
-      idToken: tokenSet.id_token,
-      claims: tokenSet.claims(),
-    };
-  } catch (error) {
-    console.error('Token exchange failed:', error);
-    throw error;
-  }
+  return {
+    idToken: tokenSet.id_token,
+    claims: tokenSet.claims(),
+  };
 }
 
 // extract callback params from request
-export function extractCallbackParams(req: Request) {
+export function extractCallbackParams(req: Request<{}, {}, {}, CallbackReqParam>): CallbackParamsType {
+  // TODO: remove
   // const client = getClientOrInitialize();
   return client.callbackParams(req);
 }

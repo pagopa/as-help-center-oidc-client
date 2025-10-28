@@ -10,6 +10,8 @@ import { ApiError } from '@errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
 import { LogoutReqParam } from '@dtos/auth/logout.dto';
 import { LoginReqParam } from '@dtos/auth/login.dto';
+import { CallbackReqParam } from '@dtos/auth/callback.dto';
+import { AccessTokenClaims, StateJwtPayload } from 'src/types/auth.types';
 
 export const login = async (req: Request<{}, {}, {}, LoginReqParam>, res: Response) => {
   const { return_to, contact_email } = req.query;
@@ -25,9 +27,7 @@ export const login = async (req: Request<{}, {}, {}, LoginReqParam>, res: Respon
   res.redirect(authUrl);
 };
 
-export const callback = async (req: Request, res: Response) => {
-  // TODO: if qp contains return_to, zendesk_redirect, or client_id -> check it to prevent client usage from other platforms
-  console.log('qp callback:', req.query);
+export const callback = async (req: Request<{}, {}, {}, CallbackReqParam>, res: Response) => {
   const params = oidcClient.extractCallbackParams(req);
   const { state, code, error, error_description } = params;
 
@@ -42,36 +42,40 @@ export const callback = async (req: Request, res: Response) => {
   }
 
   // Validate state
-  let statePayload;
+  let statePayload: StateJwtPayload;
   try {
     statePayload = securityCheckManager.validateAndGetState(state);
-  } catch (stateError: unknown) {
+  } catch (stateError) {
     console.error('State validation error:', stateError);
     throw new ApiError('State validation error', StatusCodes.BAD_REQUEST);
   }
 
   // Exchange code with tokens
-  const { claims } = await oidcClient.handleCallback(params, {
-    state,
-    nonce: statePayload?.nonce,
-  });
+  let claims: AccessTokenClaims;
+  try {
+    const tokenSet = await oidcClient.handleCallback(params, {
+      state,
+      nonce: statePayload?.nonce,
+    });
+    claims = tokenSet.claims;
+  } catch (tokenExchangeError) {
+    console.error('Token exchange error:', tokenExchangeError);
+    throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST);
+  }
 
-  console.log(statePayload?.contact_email, statePayload?.return_to_url);
-
-  // Additional nonce validation (optional, it was already done from openid-client lib -> to verify)
+  // Additional nonce validation (optional, it should be already done from openid-client lib)
   try {
     securityCheckManager.validateNonce(statePayload?.nonce, claims.nonce);
-  } catch (nonceError: unknown) {
+  } catch (nonceError) {
     console.error('Nonce validation error:', nonceError);
     throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST);
   }
 
-  console.log(`Login completed for user: ${claims.email}`);
-
+  // generate zendesk jwt
   const jwtAccess = JwtAuthService.generateAuthJwt(
     `${claims.name} ${claims.familyName}`,
-    claims.fiscalNumber as string | undefined,
-    '_users_hc_cac', // TODO: what we need to include
+    claims.fiscalNumber,
+    config.authJwt.jwtTokenOrganizationClaim,
     statePayload?.contact_email,
   );
   res.send(loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload?.return_to_url));
