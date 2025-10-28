@@ -45,19 +45,3 @@ export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken:
     </html>
   `;
 };
-
-export const logoutRedirect = (returnToUrl: string) => {
-  return `
-    <html>
-      <head>
-        <meta http-equiv="refresh" content="3;url=${returnToUrl}" />
-        <style>
-          ${spinnerStyles}
-        </style>
-      </head>
-      <body>
-        <div class="spinner"></div>
-      </body>
-    </html>
-  `;
-};

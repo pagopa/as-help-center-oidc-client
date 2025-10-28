@@ -1,8 +1,19 @@
 import config from '@config/env';
 
-export const getErrorPageFromReturnTo = (returnTo: string) => {
-  const baseUrl = returnTo ? new URL(returnTo).origin : config.cac.homeUrl;
-  return `${baseUrl}/generic-error`;
+export const getHCUrlFromBrandId = (brandId?: string): string => {
+  const brandOrigins: Record<string, string> = {
+    brandA: config.cac.homeUrl,
+    brandB: config.cac.ioUrl,
+    brandC: config.cac.sendUrl,
+    brandD: config.cac.pagopaUrl,
+  };
+
+  const origin = brandId ? brandOrigins[brandId] : config.cac.homeUrl;
+  return origin;
+};
+
+export const getErrorPageFromBrandId = (brandId?: string) => {
+  return `${getHCUrlFromBrandId(brandId)}/generic-error`;
 };
 
 const isValidReturnTo = (url: string): boolean => {
@@ -16,5 +27,5 @@ const isValidReturnTo = (url: string): boolean => {
   }
 };
 
-export const sanitizedReturnTo = (returnTo: string) =>
+export const sanitizedReturnTo = (returnTo?: string) =>
   returnTo && isValidReturnTo(returnTo) ? returnTo : config.cac.homeUrl;
