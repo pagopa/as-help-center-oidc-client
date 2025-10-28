@@ -69,6 +69,6 @@ export function extractCallbackParams(req: Request<{}, {}, {}, CallbackReqParam>
 }
 
 // verify if client oidc is initialized
-export function isInitialized() {
+export function isInitialized(): boolean {
   return !!client;
 }
