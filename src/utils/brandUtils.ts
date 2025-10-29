@@ -8,7 +8,7 @@ export const getHCUrlFromBrandId = (brandId?: string): string => {
     '30056686396177': config.cac.pagopaUrl,
   };
 
-  const origin = brandId ? brandOrigins[brandId] : config.cac.homeUrl;
+  const origin = brandId ? brandOrigins[brandId] || config.cac.homeUrl : config.cac.homeUrl;
   return origin;
 };
 
@@ -20,7 +20,12 @@ const isValidReturnTo = (url: string): boolean => {
   try {
     const parsedUrl = new URL(url);
     // only allow-list of trusted origins
-    const allowedOrigins = [config.cac.homeUrl, config.cac.ioUrl, config.cac.sendUrl, config.cac.pagopaUrl];
+    const allowedOrigins = [
+      new URL(config.cac.homeUrl).origin,
+      new URL(config.cac.ioUrl).origin,
+      new URL(config.cac.sendUrl).origin,
+      new URL(config.cac.pagopaUrl).origin,
+    ];
     return allowedOrigins.includes(parsedUrl.origin);
   } catch {
     return false;
