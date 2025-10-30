@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.4.0...v1.5.0) (2025-10-30)
+
+
+### Features
+
+* zod validation ([#6](https://github.com/pagopa/as-help-center-oidc-client/issues/6)) ([8eb45f1](https://github.com/pagopa/as-help-center-oidc-client/commit/8eb45f10bf8f87b6afda830f4dd5b6e89436646a))
+
 # [1.4.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.3.0...v1.4.0) (2025-10-07)
 
 
