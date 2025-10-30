@@ -1,0 +1,74 @@
+import * as securityCheckManager from '@services/oidcSecurityCheck.service';
+import * as oidcClient from '@services/oidcClient.service';
+import * as JwtAuthService from '@services/jwtAuth.service';
+import config from '@config/env';
+import { loginFormAutoSubmit } from '@utils/zendeskRedirect';
+import { ApiError } from '@errors/ApiError';
+import { StatusCodes } from 'http-status-codes';
+import { AccessTokenClaims, StateJwtPayload } from 'src/types/auth.types';
+import { CallbackParamsType } from 'openid-client';
+
+export const generateAuthenticationUrlForLogin = async (returnTo: string, contactEmail: string): Promise<string> => {
+  // generate state and nonce
+  const { state, nonce } = securityCheckManager.createStateAndNonce({
+    return_to_url: returnTo,
+    contact_email: contactEmail,
+  });
+  // generate authUrl
+  return oidcClient.generateAuthUrl(state, nonce);
+};
+
+export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParams: CallbackParamsType) => {
+  const { state, code, error, error_description } = callbackParams;
+
+  // Manage provider errors
+  if (error) {
+    console.error('OIDC Provider error:', error, error_description);
+    throw new ApiError('Authorization failed', StatusCodes.BAD_REQUEST);
+  }
+
+  if (!code) {
+    throw new ApiError('Missing code required parameters', StatusCodes.BAD_REQUEST);
+  }
+
+  // Validate state
+  let statePayload: StateJwtPayload;
+  try {
+    statePayload = securityCheckManager.validateAndGetState(state);
+  } catch (stateError) {
+    console.error('State validation error:', stateError);
+    throw new ApiError('State validation error', StatusCodes.BAD_REQUEST);
+  }
+
+  // Exchange code with tokens
+  let claims: AccessTokenClaims;
+  try {
+    const tokenSet = await oidcClient.handleCallback(callbackParams, {
+      state,
+      nonce: statePayload?.nonce,
+    });
+    claims = tokenSet.claims;
+  } catch (tokenExchangeError) {
+    console.error('Token exchange error:', tokenExchangeError);
+    throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST);
+  }
+
+  // Additional nonce validation (optional, it should be already done from openid-client lib)
+  try {
+    securityCheckManager.validateNonce(statePayload?.nonce, claims.nonce);
+  } catch (nonceError) {
+    console.error('Nonce validation error:', nonceError);
+    throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST);
+  }
+
+  // generate zendesk jwt
+  const jwtAccess = JwtAuthService.generateAuthJwt(
+    `${claims.name} ${claims.familyName}`,
+    claims.fiscalNumber,
+    config.authJwt.jwtTokenOrganizationClaim,
+    statePayload?.contact_email,
+  );
+
+  // generate login form auto submit HTML
+  return loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload?.return_to_url);
+};
