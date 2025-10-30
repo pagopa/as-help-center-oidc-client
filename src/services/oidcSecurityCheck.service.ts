@@ -1,20 +1,15 @@
 import config from '@config/env';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { generators } from 'openid-client';
+import { ExtraStateData, StateAndNonce, StateJwtPayload } from 'src/types/auth.types';
 
 const STATE_TOKEN_SECRET = config.stateJwt.secret;
 const STATE_TOKEN_EXPIRING = config.stateJwt.expiring;
 const JWT_ALGORITHM = 'HS256';
 
-type ExtraStateData = {
-  return_to_url: string;
-  contact_email: string;
-};
-
 // create new state and nonce
-// state will be a jwt signed token in order maintain code stateless (state token will be verified between different api calls)
-export function createStateAndNonce(extraStateData?: ExtraStateData) {
-  console.log(extraStateData?.contact_email, extraStateData?.return_to_url);
+// state will be a jwt signed token in order to maintain code stateless (state token will be verified with secret key between different api calls)
+export function createStateAndNonce(extraStateData: ExtraStateData): StateAndNonce {
   const stateValue = generators.state();
   const nonce = generators.nonce();
 
@@ -23,9 +18,8 @@ export function createStateAndNonce(extraStateData?: ExtraStateData) {
     createdAt: new Date().toISOString(),
     stateValue,
     nonce,
-    ...(extraStateData
-      ? { return_to_url: extraStateData.return_to_url, contact_email: extraStateData.contact_email }
-      : {}),
+    return_to_url: extraStateData.return_to_url,
+    contact_email: extraStateData.contact_email,
   };
 
   const state = jwt.sign(statePayload, STATE_TOKEN_SECRET, {
@@ -37,14 +31,13 @@ export function createStateAndNonce(extraStateData?: ExtraStateData) {
 }
 
 // validate the token state and return the payload
-export function validateAndGetState(state?: string) {
+export function validateAndGetState(state?: string): StateJwtPayload {
   if (!state) {
     throw new Error('State parameter is required');
   }
 
   try {
-    const statePayload = jwt.verify(state, STATE_TOKEN_SECRET) as JwtPayload; // TODO: custom type
-    console.log('State JWT valido:', statePayload);
+    const statePayload = jwt.verify(state, STATE_TOKEN_SECRET) as StateJwtPayload;
     return statePayload;
   } catch (jwtError) {
     console.error('JWT validation error:', jwtError);

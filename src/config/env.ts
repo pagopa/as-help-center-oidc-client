@@ -5,16 +5,17 @@ dotenv.config();
 
 export default {
   server: {
-    port: process.env.PORT || 3000,
+    port: Number(process.env.PORT) || 3000,
     host: process.env.HOST || 'https://slightly-intent-louse.ngrok-free.app',
     environment: process.env.NODE_ENV || NODE_ENV_VALUES.development,
-    clientRedirectUri: `${process.env.HOST}/auth/callback`,
+    clientRedirectUri: `${process.env.HOST}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
   },
 
   authJwt: {
-    secret: process.env.AUTH_JWT_SECRET || crypto.randomBytes(16).toString('hex'),
+    secret: process.env.AUTH_JWT_SECRET || throwMissingRequiredEnvVar('AUTH_JWT_SECRET'),
     loginActionEndpoint:
       process.env.JWT_LOGIN_ACTION_ENDPOINT ?? throwMissingRequiredEnvVar('JWT_LOGIN_ACTION_ENDPOINT'),
+    jwtTokenOrganizationClaim: process.env.JWT_TOKEN_ORGANIZATION_CLAIM || 'users_hc_cac',
   },
 
   stateJwt: {
@@ -27,6 +28,7 @@ export default {
     clientId: process.env.OIDC_CLIENT_ID ?? throwMissingRequiredEnvVar('OIDC_CLIENT_ID'),
     clientSecret: process.env.OIDC_CLIENT_SECRET,
     scopes: buildOidcScopes(),
+    responseType: process.env.OIDC_RESPONSE_TYPE || 'code',
     endpoints: {
       authorize: process.env.OIDC_AUTHORIZE_ENDPOINT || '/oidc/authorize',
       token: process.env.OIDC_TOKEN_ENDPOINT || 'login',

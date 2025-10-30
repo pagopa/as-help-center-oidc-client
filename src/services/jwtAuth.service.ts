@@ -9,14 +9,12 @@ export function generateAuthJwt(name?: string, fiscalNumber?: string, org?: stri
     iat: Math.floor(new Date().getTime() / 1000),
     jti: uuidv4(),
     name: name,
-    // email: fiscalNumber + "@pagopa.users",
     email: emailContact,
     organization: org,
-    // user_fields: { email_contact: emailContact, fiscalcode: fiscalNumber },
     user_fields: { aux_data: fiscalNumber },
   };
   // encode
-  // expiring is automatically set by zendesk (and can be changed - from 5 minutes to 2 weeks)
+  // expiring is automatically set by zendesk, but it works only after an inactivity period (and can be changed - from 5 minutes to 2 weeks)
   return jwt.sign(payload, config.authJwt.secret, {
     algorithm: JWT_SIGN_ALGORITHM,
   });

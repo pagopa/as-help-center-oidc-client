@@ -13,14 +13,14 @@ function startServer(): void {
     // OIDC client initialization
     oidcClient.getClientOrInitialize();
 
-    // Middlewares
+    // api response type middlewares
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
 
     // api routes
     app.use('/', routes);
 
-    // middlewares
+    // api error middlewares
     app.use(notFoundHandler);
     app.use(errorHandler);
 
