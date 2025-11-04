@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.5.0...v1.6.0) (2025-11-04)
+
+
+### Features
+
+* add services layer ([#7](https://github.com/pagopa/as-help-center-oidc-client/issues/7)) ([19243db](https://github.com/pagopa/as-help-center-oidc-client/commit/19243db6fb0e254548614716ac2ee9e98d58640d))
+
 # [1.5.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.4.0...v1.5.0) (2025-10-30)
 
 
