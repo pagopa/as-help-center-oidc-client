@@ -30,6 +30,9 @@ The project is managed via a CI/CD pipeline that ensures code integrity and effi
 - Express
 - Typescript
 - Dotenv
+- ZOD
+- Jest
+- OpenID Connect Client
 - AWS
 - Github Actions
 - Terraform
@@ -80,6 +83,7 @@ npm start
 - `npm run build`: Compiles the TypeScript code into JavaScript.
 - `npm start`: Starts the compiled application.
 - `npm run dev`: Starts the application in development mode using `nodemon`.
+- `npm run test`: Run all unit tests in the "tests/" directory, generating code coverage reports
 - `npm run type-check`: Runs TypeScript type checking.
 - `lint`: Runs eslint checks,
 - `lint:fix`: Run eslint and fix all errors,
