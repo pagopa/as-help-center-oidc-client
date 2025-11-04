@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 const spinnerStyles = `
   .spinner {
     margin: 100px auto;
@@ -27,6 +29,9 @@ const spinnerStyles = `
   }`;
 
 export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken: string, returnToUrl: string) => {
+  if (isEmpty(loginActionEndpoint) || isEmpty(jwtAccessToken) || isEmpty(returnToUrl)) {
+    throw new Error('Invalid parameters provided to loginFormAutoSubmit');
+  }
   return `
     <html>
       <head>
