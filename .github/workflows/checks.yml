@@ -51,8 +51,7 @@ jobs:
         id: type-check
         run: npm run type-check
 
-      # TODO add tests
-      # run unit tests
-      # - name: Unit tests
-      #   id: unit-tests
-      #   run: npm run test
+      # run unit tests
+      - name: Unit tests
+        id: unit-tests
+        run: npm run test
