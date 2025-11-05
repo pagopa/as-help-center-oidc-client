@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.6.0...v1.7.0) (2025-11-05)
+
+
+### Features
+
+* unit tests ([#8](https://github.com/pagopa/as-help-center-oidc-client/issues/8)) ([d9ebc24](https://github.com/pagopa/as-help-center-oidc-client/commit/d9ebc241947b2df58ccfefef29cc18fa3ffef8ac))
+
 # [1.6.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.5.0...v1.6.0) (2025-11-04)
 
 
