@@ -45,7 +45,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   try {
     const tokenSet = await oidcClient.handleCallback(callbackParams, {
       state,
-      nonce: statePayload?.nonce,
+      nonce: statePayload.nonce,
     });
     claims = tokenSet.claims;
   } catch (tokenExchangeError) {
@@ -53,9 +53,12 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST);
   }
 
+  // TODO: should we check if statePayload have required fields? (nonce, return_to_url, contact_email)
+  // TODO: should we check if claims have required fields? (nonce, name, familyName, fiscalNumber)
+
   // Additional nonce validation (optional, it should be already done from openid-client lib)
   try {
-    securityCheckManager.validateNonce(statePayload?.nonce, claims.nonce);
+    securityCheckManager.validateNonce(statePayload.nonce, claims.nonce);
   } catch (nonceError) {
     console.error('Nonce validation error:', nonceError);
     throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST);
@@ -64,11 +67,11 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   // generate zendesk jwt
   const jwtAccess = JwtAuthService.generateAuthJwt(
     `${claims.name} ${claims.familyName}`,
-    claims.fiscalNumber,
     config.authJwt.jwtTokenOrganizationClaim,
-    statePayload?.contact_email,
+    statePayload.contact_email,
+    claims.fiscalNumber,
   );
 
   // generate login form auto submit HTML
-  return loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload?.return_to_url);
+  return loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload.return_to_url);
 };

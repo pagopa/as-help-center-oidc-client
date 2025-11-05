@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const JWT_SIGN_ALGORITHM = 'HS256';
 
-export function generateAuthJwt(name?: string, fiscalNumber?: string, org?: string, emailContact?: string) {
+export function generateAuthJwt(name: string, org: string, emailContact: string, fiscalNumber?: string) {
   const payload = {
     iat: Math.floor(new Date().getTime() / 1000),
     jti: uuidv4(),
