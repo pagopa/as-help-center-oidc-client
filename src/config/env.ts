@@ -12,7 +12,7 @@ export default {
   },
 
   authJwt: {
-    secret: process.env.AUTH_JWT_SECRET || throwMissingRequiredEnvVar('AUTH_JWT_SECRET'),
+    secret: process.env.AUTH_JWT_SECRET ?? throwMissingRequiredEnvVar('AUTH_JWT_SECRET'),
     loginActionEndpoint:
       process.env.JWT_LOGIN_ACTION_ENDPOINT ?? throwMissingRequiredEnvVar('JWT_LOGIN_ACTION_ENDPOINT'),
     jwtTokenOrganizationClaim: process.env.JWT_TOKEN_ORGANIZATION_CLAIM || 'users_hc_cac',
@@ -26,7 +26,7 @@ export default {
   oidc: {
     issuer: process.env.OIDC_ISSUER ?? throwMissingRequiredEnvVar('OIDC_ISSUER'),
     clientId: process.env.OIDC_CLIENT_ID ?? throwMissingRequiredEnvVar('OIDC_CLIENT_ID'),
-    clientSecret: process.env.OIDC_CLIENT_SECRET,
+    clientSecret: process.env.OIDC_CLIENT_SECRET ?? throwMissingRequiredEnvVar('OIDC_CLIENT_SECRET'),
     scopes: buildOidcScopes(),
     responseType: process.env.OIDC_RESPONSE_TYPE || 'code',
     endpoints: {
