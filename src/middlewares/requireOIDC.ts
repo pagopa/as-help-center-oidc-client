@@ -8,7 +8,8 @@ export const requireOIDC = () => {
   return (_req: Request, _res: Response, next: NextFunction) => {
     if (!oidcClient.isInitialized()) {
       next(new ApiError('OIDC Client not initialized', StatusCodes.INTERNAL_SERVER_ERROR));
+    } else {
+      next();
     }
-    next();
   };
 };

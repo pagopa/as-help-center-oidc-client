@@ -36,7 +36,7 @@ describe('requireOIDC', () => {
     middleware(mockRequest as Request, mockResponse as Response, mockNext);
 
     expect(oidcClient.isInitialized).toHaveBeenCalled();
-    expect(mockNext).toHaveBeenCalledTimes(2);
+    expect(mockNext).toHaveBeenCalledTimes(1);
     expect(mockNext).toHaveBeenCalledWith(expect.any(ApiError));
 
     const error = (mockNext as jest.Mock).mock.calls[0][0];
