@@ -13,7 +13,7 @@ export function validate(schemas: { body?: ZodType<any>; query?: ZodType<any>; p
       }
       if (schemas.params) {
         const validatedParams = schemas.params.parse(req.params);
-        updateTargetWithValidatedData(req.query, validatedParams);
+        updateTargetWithValidatedData(req.params, validatedParams);
       }
       next();
     } catch (error) {
