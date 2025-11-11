@@ -5,6 +5,7 @@
   "main": "dist/src/app.js",
   "scripts": {
     "test": "jest",
+    "test:silent": "jest --silent",
     "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.json",
     "start": "node dist/src/app.js",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts",
