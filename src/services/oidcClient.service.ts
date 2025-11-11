@@ -4,12 +4,13 @@ import { Request } from 'express';
 import { CallbackReqParam } from '@dtos/auth/callback.dto';
 import { ExchangedTokenSet } from 'src/types/auth.types';
 
-let client: Client;
+let client: Client | null = null;
 
 // initialize and get oidc client
-export function getClientOrInitialize() {
+export function initializeClient() {
   try {
     if (!client) {
+      // Client Discovery: async - it require a different init and get client approach
       // const issuer = await Issuer.discover(process.env.OIDC_ISSUER);
       const issuer = new Issuer({
         issuer: config.oidc.issuer,
@@ -26,17 +27,20 @@ export function getClientOrInitialize() {
 
       console.log('OIDC Client initialized successfully');
     }
-    return client;
   } catch (error) {
     console.error('OIDC Client initialization failed:', error);
     throw error;
   }
 }
 
+export function getClientOrThrow(): Client {
+  if (!client) throw new Error('OIDC client not initialized.');
+  return client;
+}
+
 // generate oidc authorize url
 export function generateAuthUrl(state: string, nonce: string, additionalParams: Record<string, any> = {}): string {
-  // TODO: remove
-  // const client = getClientOrInitialize();
+  const client = getClientOrThrow();
   return client.authorizationUrl({
     scope: config.oidc.scopes.join(' '),
     state,
@@ -51,8 +55,7 @@ export async function handleCallback(
   callbackParams: CallbackParamsType,
   checks: { state?: string; nonce?: string },
 ): Promise<ExchangedTokenSet> {
-  // TODO: remove
-  // const client = getClientOrInitialize();
+  const client = getClientOrThrow();
   const tokenSet = await client.callback(config.server.clientRedirectUri, callbackParams, checks);
 
   return {
@@ -63,8 +66,7 @@ export async function handleCallback(
 
 // extract callback params from request
 export function extractCallbackParams(req: Request<{}, {}, {}, CallbackReqParam>): CallbackParamsType {
-  // TODO: remove
-  // const client = getClientOrInitialize();
+  const client = getClientOrThrow();
   return client.callbackParams(req);
 }
 

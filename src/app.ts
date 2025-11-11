@@ -11,7 +11,7 @@ const app = express();
 function startServer(): void {
   try {
     // OIDC client initialization
-    oidcClient.getClientOrInitialize();
+    oidcClient.initializeClient();
 
     // api response type middlewares
     app.use(express.urlencoded({ extended: true }));

@@ -1,9 +1,10 @@
 import {
-  getClientOrInitialize,
+  initializeClient,
   generateAuthUrl,
   handleCallback,
   extractCallbackParams,
   isInitialized,
+  getClientOrThrow,
 } from '@services/oidcClient.service';
 import { Issuer, Client } from 'openid-client';
 import { Request } from 'express';
@@ -29,7 +30,7 @@ describe('oidcClient.service', () => {
     );
 
     // Initialize the client once for all tests
-    getClientOrInitialize();
+    initializeClient();
   });
 
   beforeEach(() => {
@@ -38,14 +39,14 @@ describe('oidcClient.service', () => {
 
   describe('getClientOrInitialize', () => {
     it('should return a client instance', () => {
-      const client = getClientOrInitialize();
+      const client = getClientOrThrow();
       expect(client).toBeDefined();
       expect(typeof client).toBe('object');
     });
 
     it('should return same client on subsequent calls', () => {
-      const client1 = getClientOrInitialize();
-      const client2 = getClientOrInitialize();
+      const client1 = getClientOrThrow();
+      const client2 = getClientOrThrow();
       expect(client1).toBe(client2);
     });
   });
