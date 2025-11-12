@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.8.0...v1.9.0) (2025-11-12)
+
+
+### Features
+
+* check required fields sent from oid ([#10](https://github.com/pagopa/as-help-center-oidc-client/issues/10)) ([a39ab3f](https://github.com/pagopa/as-help-center-oidc-client/commit/a39ab3f9b27ec8fa459aa40f92c9a590d8257e4a))
+
 # [1.8.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.7.0...v1.8.0) (2025-11-11)
 
 
