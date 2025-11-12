@@ -3,23 +3,23 @@ import config from '@config/env';
 
 describe('brandUtils', () => {
   describe('getHCUrlFromBrandId', () => {
-    it('should return homeUrl for brand ID 30056696712977', () => {
-      const result = getHCUrlFromBrandId('30056696712977');
+    it('should return homeUrl for brand ID', () => {
+      const result = getHCUrlFromBrandId(config.cac.homeBrandId);
       expect(result).toBe(config.cac.homeUrl);
     });
 
-    it('should return ioUrl for brand ID 30056501290385', () => {
-      const result = getHCUrlFromBrandId('30056501290385');
+    it('should return ioUrl for brand ID', () => {
+      const result = getHCUrlFromBrandId(config.cac.ioBrandId);
       expect(result).toBe(config.cac.ioUrl);
     });
 
-    it('should return sendUrl for brand ID 30056681477393', () => {
-      const result = getHCUrlFromBrandId('30056681477393');
+    it('should return sendUrl for brand ID', () => {
+      const result = getHCUrlFromBrandId(config.cac.sendBrandId);
       expect(result).toBe(config.cac.sendUrl);
     });
 
-    it('should return pagopaUrl for brand ID 30056686396177', () => {
-      const result = getHCUrlFromBrandId('30056686396177');
+    it('should return pagopaUrl for brand ID', () => {
+      const result = getHCUrlFromBrandId(config.cac.pagopaBrandId);
       expect(result).toBe(config.cac.pagopaUrl);
     });
 
@@ -35,9 +35,9 @@ describe('brandUtils', () => {
   });
 
   describe('getErrorPageFromBrandId', () => {
-    it('should return error page URL for valid brand ID', () => {
-      const result = getErrorPageFromBrandId('30056696712977');
-      expect(result).toBe(`${config.cac.homeUrl}/generic-error`);
+    it('should return error page URL for valid IO brand ID', () => {
+      const result = getErrorPageFromBrandId(config.cac.ioBrandId);
+      expect(result).toBe(`${config.cac.ioUrl}/generic-error`);
     });
 
     it('should return error page URL with homeUrl for unknown brand ID', () => {

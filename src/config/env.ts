@@ -38,10 +38,16 @@ export default {
   },
 
   cac: {
+    // urls
     homeUrl: process.env.CAC_HOME_URL || 'https://centroassistenza.pagopa.it/hc/it',
     ioUrl: process.env.CAC_IO_URL || 'https://assistenza.pagopa.gov.it/hc/it',
     sendUrl: process.env.CAC_SEND_URL || 'https://assistenza.notifichedigitali.it/hc/it',
     pagopaUrl: process.env.CAC_PAGOPA_URL || 'https://assistenza.pagopa.gov.it/hc/it',
+    // brand ids
+    homeBrandId: process.env.HOME_BRAND_ID ?? throwMissingRequiredEnvVar('HOME_BRAND_ID'),
+    ioBrandId: process.env.IO_BRAND_ID ?? throwMissingRequiredEnvVar('IO_BRAND_ID'),
+    sendBrandId: process.env.SEND_BRAND_ID ?? throwMissingRequiredEnvVar('SEND_BRAND_ID'),
+    pagopaBrandId: process.env.PAGOPA_BRAND_ID ?? throwMissingRequiredEnvVar('PAGOPA_BRAND_ID'),
   },
 };
 
