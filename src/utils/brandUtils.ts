@@ -12,6 +12,7 @@ export const getHCUrlFromBrandId = (brandId?: string): string => {
   return origin;
 };
 
+// TODO: use this or send res error and then handle error page redirection on FE side ?
 export const getErrorPageFromBrandId = (brandId?: string) => {
   return `${getHCUrlFromBrandId(brandId)}/generic-error`;
 };

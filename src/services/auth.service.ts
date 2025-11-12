@@ -53,9 +53,6 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST);
   }
 
-  // TODO: should we check if statePayload have required fields? (nonce, return_to_url, contact_email)
-  // TODO: should we check if claims have required fields? (nonce, name, familyName, fiscalNumber)
-
   // Additional nonce validation (optional, it should be already done from openid-client lib)
   try {
     securityCheckManager.validateNonce(statePayload.nonce, claims.nonce);

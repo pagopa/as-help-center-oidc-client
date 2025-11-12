@@ -2,6 +2,7 @@ import config from '@config/env';
 import jwt from 'jsonwebtoken';
 import { generators } from 'openid-client';
 import { ExtraStateData, StateAndNonce, StateJwtPayload } from 'src/types/auth.types';
+import { validateRequiredFields } from '@utils/utils';
 
 const STATE_TOKEN_SECRET = config.stateJwt.secret;
 const STATE_TOKEN_EXPIRING = config.stateJwt.expiring;
@@ -36,13 +37,21 @@ export function validateAndGetState(state?: string): StateJwtPayload {
     throw new Error('State parameter is required');
   }
 
+  let statePayload: StateJwtPayload;
   try {
-    const statePayload = jwt.verify(state, STATE_TOKEN_SECRET) as StateJwtPayload;
-    return statePayload;
+    statePayload = jwt.verify(state, STATE_TOKEN_SECRET) as StateJwtPayload;
   } catch (jwtError) {
-    console.error('JWT validation error:', jwtError);
-    throw new Error('State is not valid');
+    throw new Error('JWT validation error: ' + jwtError);
   }
+
+  // validate state payload required fields
+  validateRequiredFields(
+    statePayload,
+    ['nonce', 'return_to_url', 'contact_email'],
+    'Missing required state payload fields',
+  );
+
+  return statePayload;
 }
 
 // validate nonce attribute (if present and if it is equal to initial nonce)
