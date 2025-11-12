@@ -1,4 +1,4 @@
-import { sanitizeLogMessage } from '@utils/utils';
+import { sanitizeLogMessage, validateRequiredFields } from '@utils/utils';
 
 describe('utils', () => {
   describe('sanitizeLogMessage', () => {
@@ -86,6 +86,41 @@ describe('utils', () => {
       expect(result).toHaveLength(500);
       expect(result).not.toContain('\n');
       expect(result).not.toContain('\r');
+    });
+  });
+
+  describe('validateRequiredFields', () => {
+    it('should not throw when all required fields are present and valid', () => {
+      const obj = { name: 'John', email: 'john@test.com', age: 30 };
+      expect(() => validateRequiredFields(obj, ['name', 'email'], 'Test validation')).not.toThrow();
+    });
+
+    it('should throw when payload is undefined', () => {
+      expect(() => validateRequiredFields(undefined, ['name'], 'Test validation')).toThrow(
+        'Test validation: payload missing',
+      );
+    });
+
+    it('should throw when a required field is missing', () => {
+      const obj = { name: 'John' };
+      expect(() => validateRequiredFields(obj, ['name', 'email'], 'Test validation')).toThrow('Test validation: email');
+    });
+
+    it('should throw when multiple required fields are missing or null or undefined', () => {
+      const obj = { name: 'John', email: null, fiscalCode: undefined };
+      expect(() => validateRequiredFields(obj, ['name', 'email', 'age', 'fiscalCode'], 'Test validation')).toThrow(
+        'Test validation: email, age',
+      );
+    });
+
+    it('should work with empty required fields array', () => {
+      const obj = { name: 'John' };
+      expect(() => validateRequiredFields(obj, [], 'Test validation')).not.toThrow();
+    });
+
+    it('should validate nested object fields', () => {
+      const obj = { user: { name: 'John' }, email: 'test@test.com' };
+      expect(() => validateRequiredFields(obj, ['user', 'email'], 'Test validation')).not.toThrow();
     });
   });
 });

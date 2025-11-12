@@ -2,6 +2,7 @@ import { createStateAndNonce, validateAndGetState, validateNonce } from '@servic
 import config from '@config/env';
 import jwt from 'jsonwebtoken';
 import { generators } from 'openid-client';
+import * as utils from '@utils/utils';
 
 jest.mock('jsonwebtoken');
 jest.mock('openid-client', () => ({
@@ -9,6 +10,10 @@ jest.mock('openid-client', () => ({
     state: jest.fn(),
     nonce: jest.fn(),
   },
+}));
+jest.mock('@utils/utils', () => ({
+  ...jest.requireActual('@utils/utils'),
+  validateRequiredFields: jest.fn(),
 }));
 
 describe('oidcSecurityCheck.service', () => {
@@ -96,6 +101,11 @@ describe('oidcSecurityCheck.service', () => {
       const result = validateAndGetState(mockState);
 
       expect(mockJwt.verify).toHaveBeenCalledWith(mockState, config.stateJwt.secret);
+      expect(utils.validateRequiredFields).toHaveBeenCalledWith(
+        mockPayload,
+        ['nonce', 'return_to_url', 'contact_email'],
+        'Missing required state payload fields',
+      );
       expect(result).toEqual(mockPayload);
     });
 
@@ -111,21 +121,16 @@ describe('oidcSecurityCheck.service', () => {
 
     it('should throw error when JWT verification fails', () => {
       const mockState = 'invalid.jwt.token';
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       mockJwt.verify.mockImplementation(() => {
         throw new Error('JWT verification failed');
       });
 
-      expect(() => validateAndGetState(mockState)).toThrow('State is not valid');
-      expect(consoleSpy).toHaveBeenCalledWith('JWT validation error:', expect.any(Error));
-
-      consoleSpy.mockRestore();
+      expect(() => validateAndGetState(mockState)).toThrow('JWT validation error:');
     });
 
     it('should throw error when JWT is expired', () => {
       const mockState = 'expired.jwt.token';
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       mockJwt.verify.mockImplementation(() => {
         const error = new Error('jwt expired');
@@ -133,18 +138,41 @@ describe('oidcSecurityCheck.service', () => {
         throw error;
       });
 
-      expect(() => validateAndGetState(mockState)).toThrow('State is not valid');
-
-      consoleSpy.mockRestore();
+      expect(() => validateAndGetState(mockState)).toThrow('JWT validation error:');
     });
 
     it('should use configured secret for verification', () => {
       const mockState = 'valid.jwt.token';
-      mockJwt.verify.mockReturnValue({} as any);
+      const mockPayload = {
+        nonce: 'nonce',
+        return_to_url: 'https://example.com',
+        contact_email: 'test@example.com',
+      };
+      mockJwt.verify.mockReturnValue(mockPayload as any);
 
       validateAndGetState(mockState);
 
       expect(mockJwt.verify).toHaveBeenCalledWith(mockState, config.stateJwt.secret);
+    });
+
+    it('should throw error when required state payload fields are missing', () => {
+      const mockState = 'valid.jwt.token';
+      const mockPayload = {
+        timestamp: 1609459200000,
+        createdAt: '2021-01-01T00:00:00.000Z',
+        stateValue: 'state-value',
+        nonce: 'nonce-value',
+        // Missing return_to_url and contact_email
+      };
+
+      mockJwt.verify.mockReturnValue(mockPayload as any);
+      (utils.validateRequiredFields as jest.Mock).mockImplementation(() => {
+        throw new Error('Missing required state payload fields: return_to_url, contact_email');
+      });
+
+      expect(() => validateAndGetState(mockState)).toThrow(
+        'Missing required state payload fields: return_to_url, contact_email',
+      );
     });
   });
 

@@ -8,8 +8,13 @@ import {
 } from '@services/oidcClient.service';
 import { Issuer, Client } from 'openid-client';
 import { Request } from 'express';
+import * as utils from '@utils/utils';
 
 jest.mock('openid-client');
+jest.mock('@utils/utils', () => ({
+  ...jest.requireActual('@utils/utils'),
+  validateRequiredFields: jest.fn(),
+}));
 
 // Note: This service uses a singleton pattern for the OIDC client
 describe('oidcClient.service', () => {
@@ -102,6 +107,10 @@ describe('oidcClient.service', () => {
         claims: jest.fn().mockReturnValue({
           sub: 'user-123',
           email: 'user@example.com',
+          nonce: 'test-nonce',
+          name: 'John',
+          familyName: 'Doe',
+          fiscalNumber: 'FISCAL123',
         }),
       };
 
@@ -114,10 +123,24 @@ describe('oidcClient.service', () => {
         callbackParams,
         checks,
       );
+      expect(utils.validateRequiredFields).toHaveBeenCalledWith(
+        expect.objectContaining({
+          nonce: 'test-nonce',
+          name: 'John',
+          familyName: 'Doe',
+          fiscalNumber: 'FISCAL123',
+        }),
+        ['nonce', 'name', 'familyName', 'fiscalNumber'],
+        'Missing required token claims',
+      );
       expect(result.idToken).toBe('mock-id-token');
       expect(result.claims).toEqual({
         sub: 'user-123',
         email: 'user@example.com',
+        nonce: 'test-nonce',
+        name: 'John',
+        familyName: 'Doe',
+        fiscalNumber: 'FISCAL123',
       });
     });
 
@@ -128,6 +151,29 @@ describe('oidcClient.service', () => {
       (mockClient.callback as jest.Mock).mockRejectedValue(new Error('Callback failed'));
 
       await expect(handleCallback(callbackParams, checks)).rejects.toThrow('Callback failed');
+    });
+
+    it('should throw error if required claims are missing', async () => {
+      const callbackParams = { code: 'auth-code', state: 'test-state' };
+      const checks = { state: 'test-state', nonce: 'test-nonce' };
+      const mockTokenSet = {
+        id_token: 'mock-id-token',
+        claims: jest.fn().mockReturnValue({
+          sub: 'user-123',
+          email: 'user@example.com',
+          nonce: 'test-nonce',
+          // Missing name, familyName, fiscalNumber
+        }),
+      };
+
+      (mockClient.callback as jest.Mock).mockResolvedValue(mockTokenSet);
+      (utils.validateRequiredFields as jest.Mock).mockImplementation(() => {
+        throw new Error('Missing required token claims: name, familyName, fiscalNumber');
+      });
+
+      await expect(handleCallback(callbackParams, checks)).rejects.toThrow(
+        'Missing required token claims: name, familyName, fiscalNumber',
+      );
     });
   });
 
