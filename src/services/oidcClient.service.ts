@@ -3,6 +3,7 @@ import config from '@config/env';
 import { Request } from 'express';
 import { CallbackReqParam } from '@dtos/auth/callback.dto';
 import { ExchangedTokenSet } from 'src/types/auth.types';
+import { validateRequiredFields } from '@utils/utils';
 
 let client: Client | null = null;
 
@@ -58,9 +59,13 @@ export async function handleCallback(
   const client = getClientOrThrow();
   const tokenSet = await client.callback(config.server.clientRedirectUri, callbackParams, checks);
 
+  const claims = tokenSet.claims();
+  // validate claims required fields
+  validateRequiredFields(claims, ['nonce', 'name', 'familyName', 'fiscalNumber'], 'Missing required token claims');
+
   return {
     idToken: tokenSet.id_token,
-    claims: tokenSet.claims(),
+    claims,
   };
 }
 
