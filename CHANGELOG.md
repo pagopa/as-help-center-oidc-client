@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.9.0...v1.10.0) (2025-11-13)
+
+
+### Features
+
+* secure return to for login endpoint ([#11](https://github.com/pagopa/as-help-center-oidc-client/issues/11)) ([f44821b](https://github.com/pagopa/as-help-center-oidc-client/commit/f44821b7cfe9c40d051cef7e3fc2be29c7f63404))
+
 # [1.9.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.8.0...v1.9.0) (2025-11-12)
 
 
