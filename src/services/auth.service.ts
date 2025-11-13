@@ -8,8 +8,14 @@ import { StatusCodes } from 'http-status-codes';
 import { AccessTokenClaims, StateJwtPayload } from 'src/types/auth.types';
 import { CallbackParamsType } from 'openid-client';
 import { sanitizedReturnTo } from '@utils/brandUtils';
+import { validateEmailDomain } from '@utils/utils';
 
 export const generateAuthenticationUrlForLogin = async (returnTo: string, contactEmail: string): Promise<string> => {
+  const isEmailDomainValid = await validateEmailDomain(contactEmail);
+  if (!isEmailDomainValid) {
+    throw new ApiError('Invalid or unreachable email domain', StatusCodes.BAD_REQUEST);
+  }
+
   // generate state and nonce
   const { state, nonce } = securityCheckManager.createStateAndNonce({
     return_to_url: returnTo,

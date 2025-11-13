@@ -1,4 +1,7 @@
-import { sanitizeLogMessage, validateRequiredFields } from '@utils/utils';
+import { sanitizeLogMessage, validateRequiredFields, validateEmailDomain } from '@utils/utils';
+import dns from 'dns/promises';
+
+jest.mock('dns/promises');
 
 describe('utils', () => {
   describe('sanitizeLogMessage', () => {
@@ -121,6 +124,48 @@ describe('utils', () => {
     it('should validate nested object fields', () => {
       const obj = { user: { name: 'John' }, email: 'test@test.com' };
       expect(() => validateRequiredFields(obj, ['user', 'email'], 'Test validation')).not.toThrow();
+    });
+  });
+
+  describe('validateEmailDomain', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should return true when MX records exist', async () => {
+      (dns.resolveMx as jest.Mock).mockResolvedValue([{ exchange: 'mx1', priority: 10 }]);
+
+      const result = await validateEmailDomain('user@example.com');
+
+      expect(dns.resolveMx).toHaveBeenCalledWith('example.com');
+      expect(result).toBe(true);
+    });
+
+    it('should return true when MX fails but A records exist', async () => {
+      (dns.resolveMx as jest.Mock).mockRejectedValue(new Error('no mx'));
+      (dns.resolve as jest.Mock).mockResolvedValue(['1.2.3.4']);
+
+      const result = await validateEmailDomain('user@domain.test');
+
+      expect(dns.resolveMx).toHaveBeenCalledWith('domain.test');
+      expect(dns.resolve).toHaveBeenCalledWith('domain.test');
+      expect(result).toBe(true);
+    });
+
+    it('should return false when both MX and A lookups fail', async () => {
+      (dns.resolveMx as jest.Mock).mockRejectedValue(new Error('no mx'));
+      (dns.resolve as jest.Mock).mockRejectedValue(new Error('no a'));
+
+      const result = await validateEmailDomain('user@nope.test');
+
+      expect(dns.resolveMx).toHaveBeenCalledWith('nope.test');
+      expect(dns.resolve).toHaveBeenCalledWith('nope.test');
+      expect(result).toBe(false);
+    });
+
+    it('should return false for emails without domain or with empty domain', async () => {
+      expect(await validateEmailDomain('no-at-symbol')).toBe(false);
+      expect(await validateEmailDomain('user@')).toBe(false);
     });
   });
 });

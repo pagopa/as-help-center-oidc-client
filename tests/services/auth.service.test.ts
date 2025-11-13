@@ -4,6 +4,7 @@ import * as oidcClient from '@services/oidcClient.service';
 import * as JwtAuthService from '@services/jwtAuth.service';
 import config from '@config/env';
 import { loginFormAutoSubmit } from '@utils/zendeskRedirect';
+import * as utils from '@utils/utils';
 import { ApiError } from '@errors/ApiError';
 import { CallbackParamsType } from 'openid-client';
 
@@ -11,10 +12,12 @@ jest.mock('@services/oidcSecurityCheck.service');
 jest.mock('@services/oidcClient.service');
 jest.mock('@services/jwtAuth.service');
 jest.mock('@utils/zendeskRedirect');
+jest.mock('@utils/utils');
 
 describe('auth.service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (utils.validateEmailDomain as jest.Mock).mockResolvedValue(true);
   });
 
   describe('generateAuthenticationUrlForLogin', () => {
@@ -39,6 +42,18 @@ describe('auth.service', () => {
       });
       expect(oidcClient.generateAuthUrl).toHaveBeenCalledWith(mockState, mockNonce);
       expect(result).toBe(mockAuthUrl);
+    });
+
+    it('should throw ApiError when email domain validation fails', async () => {
+      const return_to = 'https://example.com/return';
+      const contact_email = 'user@invalid-domain.test';
+
+      (utils.validateEmailDomain as jest.Mock).mockResolvedValueOnce(false);
+
+      const call = authService.generateAuthenticationUrlForLogin(return_to, contact_email);
+
+      await expect(call).rejects.toBeInstanceOf(ApiError);
+      await expect(call).rejects.toThrow('Invalid or unreachable email domain');
     });
   });
 
