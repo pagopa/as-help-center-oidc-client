@@ -17,9 +17,13 @@ export const loginReqParamSchema = z
       brand_id: data.brand_id,
     };
   })
-  .refine((data) => data.contact_email, {
+  .refine((data) => !!data.contact_email, {
     message: "'contact_email' is required in the 'return_to' URL",
     path: ['return_to'],
+  })
+  .refine((data) => /\S+@\S+\.\S+/.test(data.contact_email), {
+    message: "'contact_email' must be a valid email address",
+    path: ['contact_email'],
   });
 
 export type LoginReqParam = z.infer<typeof loginReqParamSchema>;
