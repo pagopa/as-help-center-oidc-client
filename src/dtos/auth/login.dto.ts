@@ -1,10 +1,20 @@
 import { stringCheckedSchema } from '@dtos/common.dto';
 import { z } from 'zod';
+import config from '@config/env';
+
+const allowedBrandIds = [
+  config.cac.homeBrandId,
+  config.cac.ioBrandId,
+  config.cac.sendBrandId,
+  config.cac.pagopaBrandId,
+];
 
 export const loginReqParamSchema = z
   .object({
     return_to: stringCheckedSchema({}),
-    brand_id: stringCheckedSchema({}),
+    brand_id: stringCheckedSchema({}).refine((bid) => allowedBrandIds.includes(bid), {
+      message: `brand_id must be one of: ${allowedBrandIds.join(', ')}`,
+    }),
   })
   .transform((data) => {
     const returnToUrl = new URL(data.return_to);

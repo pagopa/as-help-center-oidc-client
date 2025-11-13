@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.10.0...v1.11.0) (2025-11-13)
+
+
+### Features
+
+* allowed brand ids for login endpoint ([#12](https://github.com/pagopa/as-help-center-oidc-client/issues/12)) ([29f933b](https://github.com/pagopa/as-help-center-oidc-client/commit/29f933b41cc8aa50fdca3127f84f81fb5fb86bc2))
+
 # [1.10.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.9.0...v1.10.0) (2025-11-13)
 
 

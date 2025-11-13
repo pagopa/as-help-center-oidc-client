@@ -2,10 +2,10 @@ import config from '@config/env';
 
 export const getHCUrlFromBrandId = (brandId?: string): string => {
   const brandOrigins: Record<string, string> = {
-    '30056696712977': config.cac.homeUrl,
-    '30056501290385': config.cac.ioUrl,
-    '30056681477393': config.cac.sendUrl,
-    '30056686396177': config.cac.pagopaUrl,
+    [config.cac.homeBrandId]: config.cac.homeUrl,
+    [config.cac.ioBrandId]: config.cac.ioUrl,
+    [config.cac.sendBrandId]: config.cac.sendUrl,
+    [config.cac.pagopaBrandId]: config.cac.pagopaUrl,
   };
 
   const origin = brandId ? brandOrigins[brandId] || config.cac.homeUrl : config.cac.homeUrl;
