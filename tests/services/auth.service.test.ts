@@ -50,7 +50,7 @@ describe('auth.service', () => {
 
     const mockStatePayload = {
       nonce: 'nonce-value',
-      return_to_url: 'https://example.com/return',
+      return_to_url: 'https://assistenza.pagopa.gov.it/hc/it',
       contact_email: 'user@example.com',
       stateValue: 'state-value',
     };

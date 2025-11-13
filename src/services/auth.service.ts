@@ -7,6 +7,7 @@ import { ApiError } from '@errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
 import { AccessTokenClaims, StateJwtPayload } from 'src/types/auth.types';
 import { CallbackParamsType } from 'openid-client';
+import { sanitizedReturnTo } from '@utils/brandUtils';
 
 export const generateAuthenticationUrlForLogin = async (returnTo: string, contactEmail: string): Promise<string> => {
   // generate state and nonce
@@ -70,5 +71,9 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   );
 
   // generate login form auto submit HTML
-  return loginFormAutoSubmit(config.authJwt.loginActionEndpoint, jwtAccess, statePayload.return_to_url);
+  return loginFormAutoSubmit(
+    config.authJwt.loginActionEndpoint,
+    jwtAccess,
+    sanitizedReturnTo(statePayload.return_to_url),
+  );
 };
