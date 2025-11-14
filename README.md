@@ -78,6 +78,16 @@ npm run build
 npm start
 ```
 
+### Lambda wrapper
+
+This project uses the Express Lambda wrapper package `@codegenie/serverless-express` to run the Express app as an AWS Lambda function while preserving the local development workflow. This allows you to keep using Express locally and deploy the same code as a serverless Lambda without rewriting request/response handling.
+
+The Lambda handler entrypoint is the compiled `lambda` module with exported handler `lambdaHandler`:
+
+```
+dist/lambda.lambdaHandler
+```
+
 ### Available scripts
 
 - `npm run build`: Compiles the TypeScript code into JavaScript.
