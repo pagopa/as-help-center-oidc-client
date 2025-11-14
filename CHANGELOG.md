@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.12.0...v1.13.0) (2025-11-14)
+
+
+### Features
+
+* add mail domain validation ([#14](https://github.com/pagopa/as-help-center-oidc-client/issues/14)) ([e0c72ff](https://github.com/pagopa/as-help-center-oidc-client/commit/e0c72ff7af06d66b500f6aa8c3ee320c8dbaba3d))
+
 # [1.12.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.11.0...v1.12.0) (2025-11-14)
 
 
