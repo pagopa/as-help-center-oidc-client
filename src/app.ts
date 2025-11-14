@@ -1,5 +1,4 @@
 import express from 'express';
-import config from '@config/env';
 import * as oidcClient from '@services/oidcClient.service';
 import routes from './routes';
 import { errorHandler } from '@middlewares/errorHandler';
@@ -7,34 +6,24 @@ import { notFoundHandler } from '@middlewares/notFoundHandler';
 
 const app = express();
 
-// Startup
-function startServer(): void {
-  try {
-    // OIDC client initialization
-    oidcClient.initializeClient();
+// init app (middlewares, routes, OIDC)
+export function initializeApp(): void {
+  // oidc client
+  oidcClient.initializeClient();
 
-    // api response type middlewares
-    app.use(express.urlencoded({ extended: true }));
-    app.use(express.json());
+  // api response type middlewares
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
-    // api routes
-    app.use('/', routes);
+  // api routes
+  app.use('/', routes);
 
-    // api error middlewares
-    app.use(notFoundHandler);
-    app.use(errorHandler);
-
-    // Start server
-    app.listen(config.server.port, () => {
-      console.log(`Server running on ${config.server.host}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
+  // error middlewares
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 }
 
-// Start the server
-startServer();
+// initialize the app when module is loaded
+initializeApp();
 
 export default app;
