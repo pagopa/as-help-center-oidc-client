@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.11.0...v1.12.0) (2025-11-14)
+
+
+### Features
+
+* infra initial config ([#15](https://github.com/pagopa/as-help-center-oidc-client/issues/15)) ([a34e32c](https://github.com/pagopa/as-help-center-oidc-client/commit/a34e32cf8caa9365cd9554d46cc43858c7187f97))
+
 # [1.11.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.10.0...v1.11.0) (2025-11-13)
 
 
