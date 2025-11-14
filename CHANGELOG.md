@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.13.0...v1.14.0) (2025-11-14)
+
+
+### Features
+
+* add express lambda wrapper preserving local development workflow ([#16](https://github.com/pagopa/as-help-center-oidc-client/issues/16)) ([7e20cad](https://github.com/pagopa/as-help-center-oidc-client/commit/7e20cad9794058cb49bafb03cd5f31a64c09c7c3))
+
 # [1.13.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.12.0...v1.13.0) (2025-11-14)
 
 
