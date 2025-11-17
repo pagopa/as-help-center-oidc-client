@@ -8,11 +8,18 @@ module.exports = {
   testEnvironment: 'node',
   transform: {
     '^.+\.tsx?$': ['ts-jest', {}],
+    '^.+\\.m?js$': ['ts-jest', {}],
   },
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  transformIgnorePatterns: ['node_modules/(?!uuid)', '<rootDir>/jest.setup.js', '<rootDir>/jest.config.js'],
   // coverage
   collectCoverage: true,
-  collectCoverageFrom: ['src/middlewares/**/*.ts', 'src/utils/**/*.ts', 'src/services/**/*.ts', 'src/controllers/**/*.ts'],
+  collectCoverageFrom: [
+    'src/middlewares/**/*.ts',
+    'src/utils/**/*.ts',
+    'src/services/**/*.ts',
+    'src/controllers/**/*.ts',
+  ],
   coverageThreshold: {
     global: {
       branches: 70,
