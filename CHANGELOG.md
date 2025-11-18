@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.14.0...v1.15.0) (2025-11-18)
+
+
+### Features
+
+* update express and other deps ([#17](https://github.com/pagopa/as-help-center-oidc-client/issues/17)) ([3e92953](https://github.com/pagopa/as-help-center-oidc-client/commit/3e92953bbf6f4922d88da6aaae448c0ea7115f12))
+
 # [1.14.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.13.0...v1.14.0) (2025-11-14)
 
 
