@@ -34,7 +34,7 @@ export function errorHandler(error: unknown, req: Request, res: Response, _next:
 
   errorResponse.setPath(req.originalUrl);
 
-  if (env.errorJson) {
+  if (errorResponse.isRedirect === false) {
     res.status(errorResponse.statusCode).json(errorResponse.toJSON());
   } else {
     const redirectUrl = `${env.cac.homeUrl}/error_oid?code=${errorResponse.errorCode || ERROR_CODES.INTERNAL_ERROR}`;

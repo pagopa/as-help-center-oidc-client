@@ -16,6 +16,8 @@ export const healthCheck = (): HealthCheckResponse => {
     };
   } catch (error: unknown) {
     console.error('Health check error:', error);
-    throw new ApiError('Unable to get server status', StatusCodes.SERVICE_UNAVAILABLE);
+    const apiError = new ApiError('Unable to get server status', StatusCodes.SERVICE_UNAVAILABLE);
+    apiError.setIsRedirect(false);
+    throw apiError;
   }
 };
