@@ -9,11 +9,12 @@ import { AccessTokenClaims, StateJwtPayload } from 'src/types/auth.types';
 import { CallbackParamsType } from 'openid-client';
 import { sanitizedReturnTo } from '@utils/brandUtils';
 import { validateEmailDomain } from '@utils/utils';
+import { ERROR_CODES } from '@utils/constants';
 
 export const generateAuthenticationUrlForLogin = async (returnTo: string, contactEmail: string): Promise<string> => {
   const isEmailDomainValid = await validateEmailDomain(contactEmail);
   if (!isEmailDomainValid) {
-    throw new ApiError('Invalid or unreachable email domain', StatusCodes.BAD_REQUEST);
+    throw new ApiError('Invalid or unreachable email domain', StatusCodes.BAD_REQUEST, ERROR_CODES.INVALID_EMAIL);
   }
 
   // generate state and nonce
@@ -31,11 +32,11 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   // Manage provider errors
   if (error) {
     console.error('OIDC Provider error:', error, error_description);
-    throw new ApiError('Authorization failed', StatusCodes.BAD_REQUEST);
+    throw new ApiError('Authorization failed', StatusCodes.BAD_REQUEST, ERROR_CODES.PROVIDER_ERROR);
   }
 
   if (!code) {
-    throw new ApiError('Missing code required parameters', StatusCodes.BAD_REQUEST);
+    throw new ApiError('Missing code required parameters', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
   // Validate state
@@ -44,7 +45,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     statePayload = securityCheckManager.validateAndGetState(state);
   } catch (stateError) {
     console.error('State validation error:', stateError);
-    throw new ApiError('State validation error', StatusCodes.BAD_REQUEST);
+    throw new ApiError('State validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
   // Exchange code with tokens
@@ -57,7 +58,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     claims = tokenSet.claims;
   } catch (tokenExchangeError) {
     console.error('Token exchange error:', tokenExchangeError);
-    throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST);
+    throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
   // Additional nonce validation (optional, it should be already done from openid-client lib)
@@ -65,7 +66,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     securityCheckManager.validateNonce(statePayload.nonce, claims.nonce);
   } catch (nonceError) {
     console.error('Nonce validation error:', nonceError);
-    throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST);
+    throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
   // generate zendesk jwt

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import { NODE_ENV_VALUES } from '@utils/constants';
+import { stringToBool } from '@utils/utils';
 dotenv.config();
 
 export default {
@@ -49,6 +50,8 @@ export default {
     sendBrandId: process.env.SEND_BRAND_ID ?? throwMissingRequiredEnvVar('SEND_BRAND_ID'),
     pagopaBrandId: process.env.PAGOPA_BRAND_ID ?? throwMissingRequiredEnvVar('PAGOPA_BRAND_ID'),
   },
+
+  errorJson: process.env.ERROR_JSON ? stringToBool(process.env.ERROR_JSON) : false,
 };
 
 function buildOidcScopes() {
