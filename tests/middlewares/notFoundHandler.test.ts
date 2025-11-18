@@ -9,7 +9,7 @@ describe('notFoundHandler', () => {
   let mockNext: NextFunction;
 
   beforeEach(() => {
-    mockRequest = {};
+    mockRequest = { originalUrl: '/non-existent-route' };
     mockResponse = {};
     mockNext = jest.fn();
   });
@@ -26,7 +26,7 @@ describe('notFoundHandler', () => {
 
     const error = (mockNext as jest.Mock).mock.calls[0][0];
     expect(error).toBeInstanceOf(ApiError);
-    expect(error.message).toBe('Route not found');
+    expect(error.message).toBe('Route not found: /non-existent-route');
     expect(error.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(error.statusCode).toBe(404);
   });
