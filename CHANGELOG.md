@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.15.0...v1.16.0) (2025-11-18)
+
+
+### Features
+
+* errors handler redirect ([#18](https://github.com/pagopa/as-help-center-oidc-client/issues/18)) ([c5cdef4](https://github.com/pagopa/as-help-center-oidc-client/commit/c5cdef40db93196c03369fafb42110f863e5c68e))
+
 # [1.15.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.14.0...v1.15.0) (2025-11-18)
 
 
