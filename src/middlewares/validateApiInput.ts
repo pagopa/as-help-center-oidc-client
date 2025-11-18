@@ -9,11 +9,11 @@ export function validate(schemas: { body?: ZodType<any>; query?: ZodType<any>; p
       if (schemas.body) req.body = schemas.body.parse(req.body);
       if (schemas.query) {
         const validatedQuery = schemas.query.parse(req.query);
-        updateTargetWithValidatedData(req.query, validatedQuery);
+        updateTargetWithValidatedData(req, 'query', validatedQuery);
       }
       if (schemas.params) {
         const validatedParams = schemas.params.parse(req.params);
-        updateTargetWithValidatedData(req.params, validatedParams);
+        updateTargetWithValidatedData(req, 'params', validatedParams);
       }
       next();
     } catch (error) {
@@ -22,10 +22,12 @@ export function validate(schemas: { body?: ZodType<any>; query?: ZodType<any>; p
   };
 }
 
-// for req.query and params immutability
-const updateTargetWithValidatedData = (target: any, validatedQuery: any) => {
-  Object.keys(target).forEach((key) => {
-    delete target[key];
+// for req.query and params immutability in Express 5
+const updateTargetWithValidatedData = (req: Request, target: 'params' | 'query' | 'body', validatedData: any) => {
+  Object.defineProperty(req, target, {
+    value: validatedData,
+    writable: true,
+    enumerable: true,
+    configurable: true,
   });
-  Object.assign(target, validatedQuery);
 };
