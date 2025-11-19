@@ -1,0 +1,355 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CAC OIDC client",
+    "version": "1.16.0",
+    "description": "OIDC client to handle CAC help center authentication"
+  },
+  "servers": [
+    {
+      "url": "{{server}}"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "HealthCheckResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["healthy", "unhealthy"]
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "services": {
+            "type": "object",
+            "properties": {
+              "oidc": {
+                "type": "string",
+                "enum": ["initialized", "not initialized"]
+              }
+            },
+            "required": ["oidc"]
+          },
+          "uptime": {
+            "type": "number"
+          }
+        },
+        "required": ["status", "timestamp", "services", "uptime"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["message"]
+            }
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        },
+        "required": ["message", "timestamp"]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Perform health check of the service",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid data |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - permission denied to perform the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Generic error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Start OIDC login flow and redirect to OIDC provider login page",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "URL to redirect the user after login, including contact_email as query param"
+            },
+            "required": true,
+            "description": "URL to redirect the user after login, including contact_email as query param",
+            "name": "return_to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Brand identifier to determine which product the user is trying to access"
+            },
+            "required": true,
+            "description": "Brand identifier to determine which product the user is trying to access",
+            "name": "brand_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to return_to URL",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "description": "URL to redirect the user after logout",
+                  "example": "https://return-url.com"
+                },
+                "required": true,
+                "description": "URL to redirect the user after logout"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/callback": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Handle OIDC callback and effectuate login",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Value checked by the client to prevent CSRF attacks"
+            },
+            "required": true,
+            "description": "Value checked by the client to prevent CSRF attacks",
+            "name": "state",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Authorization code returned by the OIDC provider"
+            },
+            "required": true,
+            "description": "Authorization code returned by the OIDC provider",
+            "name": "code",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Error code returned by the OIDC provider"
+            },
+            "required": false,
+            "description": "Error code returned by the OIDC provider",
+            "name": "error",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Error description returned by the OIDC provider"
+            },
+            "required": false,
+            "description": "Error description returned by the OIDC provider",
+            "name": "error_description",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns HTML form that auto-submits JWT to zendesk in order to log the user in",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string",
+                  "description": "HTML page with auto-submit form containing JWT token",
+                  "example": "<html><body><form method=\"POST\" action=\"https://action-url.com\"><input name=\"jwt\" value=\"...\"/></form><script>document.forms[0].submit()</script></body></html>"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Logout and redirect to return_to URL",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "URL to redirect the user after logout"
+            },
+            "required": false,
+            "description": "URL to redirect the user after logout",
+            "name": "return_to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Brand identifier to determine which product the user is trying to logout from"
+            },
+            "required": true,
+            "description": "Brand identifier to determine which product the user is trying to logout from",
+            "name": "brand_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "email",
+              "description": "Email address of the user"
+            },
+            "required": false,
+            "description": "Email address of the user",
+            "name": "email",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Kind of logout result (info = OK | error = KO)"
+            },
+            "required": true,
+            "description": "Kind of logout result (info = OK | error = KO)",
+            "name": "kind",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Message describing the logout result"
+            },
+            "required": false,
+            "description": "Message describing the logout result",
+            "name": "message",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to return_to URL",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "description": "URL to redirect the user after logout",
+                  "example": "https://return-url.com"
+                },
+                "required": true,
+                "description": "URL to redirect the user after logout"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
