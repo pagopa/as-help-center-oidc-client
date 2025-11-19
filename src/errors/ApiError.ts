@@ -1,10 +1,4 @@
-type ErrorResponse = {
-  message: string;
-  path?: string;
-  details?: { message: string }[];
-  errorCode?: string;
-  timestamp: string;
-};
+import { ErrorResponse } from '@dtos/error.dto';
 
 export class ApiError extends Error implements ErrorResponse {
   statusCode: number;
