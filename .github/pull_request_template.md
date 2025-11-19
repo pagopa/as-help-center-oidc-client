@@ -32,3 +32,19 @@
 <!-- You can add screenshots if necessary -->
 
 ### Screenshots (if appropriate)
+
+🏞️
+
+---
+
+#### API docs notes
+
+If you add or modify any API endpoints, remember to regenerate the OpenAPI documentation so that the files (`openapi/openapi.yaml` and `openapi/openapi.json`) are up to date.
+
+Run locally:
+
+```bash
+npm run openapi:generate
+```
+
+Then, based on the newly generated OpenAPI docs, update the AWS API Gateway template at `src/infra/api/cac.tpl.json` so it reflects the updated API surface. Finally, commit all changes.

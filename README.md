@@ -98,6 +98,7 @@ dist/lambda.lambdaHandler
 - `lint`: Runs eslint checks,
 - `lint:fix`: Run eslint and fix all errors,
 - `format`: Runs prettier to format files
+- `openapi:generate`: Generate the OpenAPI spec in the /apidocs folder
 
 \
 <br/>
