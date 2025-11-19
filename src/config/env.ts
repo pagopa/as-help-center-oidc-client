@@ -4,6 +4,7 @@ import { NODE_ENV_VALUES } from '@utils/constants';
 dotenv.config();
 
 export default {
+  projectVersion: process.env.npm_package_version,
   server: {
     port: Number(process.env.PORT) || 3000,
     host: process.env.HOST || 'https://slightly-intent-louse.ngrok-free.app',

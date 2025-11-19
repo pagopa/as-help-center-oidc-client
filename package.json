@@ -16,6 +16,7 @@
     "prepare": "node .husky/install.mjs"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^8.1.0",
     "@codegenie/serverless-express": "^4.17.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -24,6 +25,7 @@
     "lodash": "^4.17.21",
     "openid-client": "^5.6.4",
     "uuid": "^13.0.0",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -44,6 +46,8 @@
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",
     "eslint": "^9.39.1",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
