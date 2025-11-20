@@ -1,10 +1,4 @@
-type ErrorResponse = {
-  message: string;
-  path?: string;
-  details?: { message: string }[];
-  errorCode?: string;
-  timestamp: string;
-};
+import { ErrorResponse } from '@dtos/error.dto';
 
 export class ApiError extends Error implements ErrorResponse {
   statusCode: number;
@@ -12,6 +6,7 @@ export class ApiError extends Error implements ErrorResponse {
   details?: { message: string }[];
   errorCode?: string;
   timestamp: string;
+  isRedirect: boolean = true;
 
   constructor(message: string, statusCode: number);
   constructor(message: string, statusCode: number, errorCode: string);
@@ -33,6 +28,10 @@ export class ApiError extends Error implements ErrorResponse {
 
   setDetails(details?: { message: string }[]) {
     this.details = details;
+  }
+
+  setIsRedirect(isRedirect: boolean) {
+    this.isRedirect = isRedirect;
   }
 
   toJSON(): ErrorResponse {

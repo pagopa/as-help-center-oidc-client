@@ -1,3 +1,4 @@
+import '@config/zodExtend';
 import express from 'express';
 import * as oidcClient from '@services/oidcClient.service';
 import routes from './routes';

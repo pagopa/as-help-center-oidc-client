@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from '@config/zodExtend';
 
 export const stringCheckedSchema = ({ min, max }: { min?: number; max?: number }) => {
   const minLength = min || 1;

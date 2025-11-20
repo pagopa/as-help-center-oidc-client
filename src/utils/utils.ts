@@ -41,7 +41,3 @@ export const validateEmailDomain = async (email: string): Promise<boolean> => {
     }
   }
 };
-
-export const stringToBool = (value?: string): boolean => {
-  return value?.toLowerCase() === 'true';
-};
