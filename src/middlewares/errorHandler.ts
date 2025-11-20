@@ -2,17 +2,18 @@ import { Request, Response, NextFunction } from 'express';
 import env from '@config/env';
 import { ApiError } from '@errors/ApiError';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { ERROR_CODES, NODE_ENV_VALUES } from '@utils/constants';
+import { ERROR_CODES } from '@utils/constants';
 import { ZodError } from 'zod';
+import { isEmpty } from 'lodash';
 
-const printError = (error: unknown, envValue: string) => {
-  if (env.server.environment === envValue) {
-    console.error('error', error);
+const printError = (error: unknown, envValues: Array<string> = []) => {
+  if (isEmpty(envValues) || envValues.includes(env.server.environment)) {
+    console.error('Error', error);
   }
 };
 
 export function errorHandler(error: unknown, req: Request, res: Response, _next: NextFunction) {
-  printError(error, NODE_ENV_VALUES.development);
+  printError(error);
 
   let errorResponse: ApiError;
   if (error instanceof ZodError) {
@@ -24,7 +25,6 @@ export function errorHandler(error: unknown, req: Request, res: Response, _next:
   } else if (error instanceof ApiError) {
     errorResponse = error;
   } else {
-    printError(error, NODE_ENV_VALUES.production);
     errorResponse = new ApiError(
       ReasonPhrases.INTERNAL_SERVER_ERROR,
       StatusCodes.INTERNAL_SERVER_ERROR,
