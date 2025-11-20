@@ -24,7 +24,10 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": ["healthy", "unhealthy"]
+            "enum": [
+              "healthy",
+              "unhealthy"
+            ]
           },
           "timestamp": {
             "type": "string"
@@ -34,16 +37,26 @@
             "properties": {
               "oidc": {
                 "type": "string",
-                "enum": ["initialized", "not initialized"]
+                "enum": [
+                  "initialized",
+                  "not initialized"
+                ]
               }
             },
-            "required": ["oidc"]
+            "required": [
+              "oidc"
+            ]
           },
           "uptime": {
             "type": "number"
           }
         },
-        "required": ["status", "timestamp", "services", "uptime"]
+        "required": [
+          "status",
+          "timestamp",
+          "services",
+          "uptime"
+        ]
       },
       "ErrorResponse": {
         "type": "object",
@@ -63,7 +76,9 @@
                   "type": "string"
                 }
               },
-              "required": ["message"]
+              "required": [
+                "message"
+              ]
             }
           },
           "errorCode": {
@@ -73,7 +88,10 @@
             "type": "string"
           }
         },
-        "required": ["message", "timestamp"]
+        "required": [
+          "message",
+          "timestamp"
+        ]
       }
     },
     "parameters": {}
@@ -81,7 +99,9 @@
   "paths": {
     "/health": {
       "get": {
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "summary": "Perform health check of the service",
         "responses": {
           "200": {
@@ -159,7 +179,9 @@
     },
     "/auth/login": {
       "get": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Start OIDC login flow and redirect to OIDC provider login page",
         "parameters": [
           {
@@ -207,7 +229,9 @@
     },
     "/auth/callback": {
       "get": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Handle OIDC callback and effectuate login",
         "parameters": [
           {
@@ -277,7 +301,9 @@
     },
     "/auth/logout": {
       "get": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Logout and redirect to return_to URL",
         "parameters": [
           {

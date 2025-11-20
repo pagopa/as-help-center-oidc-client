@@ -70,48 +70,48 @@ paths:
         - Health
       summary: Perform health check of the service
       responses:
-        '200':
+        "200":
           description: Service is healthy
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HealthCheckResponse'
-        '400':
+                $ref: "#/components/schemas/HealthCheckResponse"
+        "400":
           description: Bad request - invalid data |
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Unauthorized - authentication required or invalid credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
           description: Forbidden - permission denied to perform the request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Resource not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Generic error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '503':
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
           description: Service is unhealthy
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HealthCheckResponse'
+                $ref: "#/components/schemas/HealthCheckResponse"
   /auth/login:
     get:
       tags:
@@ -141,7 +141,7 @@ paths:
           name: brand_id
           in: query
       responses:
-        '302':
+        "302":
           description: Redirect to return_to URL
           headers:
             Location:
@@ -194,7 +194,7 @@ paths:
           name: error_description
           in: query
       responses:
-        '200':
+        "200":
           description: Returns HTML form that auto-submits JWT to zendesk in order to log
             the user in
           content:
@@ -258,7 +258,7 @@ paths:
           name: message
           in: query
       responses:
-        '302':
+        "302":
           description: Redirect to return_to URL
           headers:
             Location:
