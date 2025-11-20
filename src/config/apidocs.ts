@@ -14,6 +14,13 @@ export const generateSwaggerDocs = () => {
       title: 'CAC OIDC client',
       version: `${config.projectVersion}`,
       description: 'OIDC client to handle CAC help center authentication',
+      contact: {
+        email: 'team-cac@pagopa.it',
+      },
+      license: {
+        name: 'Apache 2.0',
+        url: 'https://www.apache.org/licenses/LICENSE-2.0.html',
+      },
     },
     servers: [
       {

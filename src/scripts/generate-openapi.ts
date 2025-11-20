@@ -3,24 +3,28 @@ import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { stringify } from 'yaml';
 
+// Configuration constants
+const CONFIG = {
+  // Server url
+  SERVER_URL: '${server_url}',
+
+  // File paths
+  COMPILED_INDEX_ROUTES_PATH: join(process.cwd(), 'dist', 'routes', 'index.js'),
+  OUTPUT_DIR: 'apidocs',
+} as const;
+
 async function main() {
   try {
-    const compiledRoutesDir = join(process.cwd(), 'dist', 'routes');
-
-    try {
-      require(join(compiledRoutesDir, 'index.js'));
-    } catch {
-      // ignore if index.js not found
-    }
+    // import index routes to ensure all routes are registered
+    require(CONFIG.COMPILED_INDEX_ROUTES_PATH);
 
     const swaggerDocs = generateSwaggerDocs();
-    swaggerDocs.servers = [{ url: '{{server}}' }];
+    swaggerDocs.servers = [{ url: CONFIG.SERVER_URL }];
 
-    const outDir = 'apidocs';
-    const outYamlPath = join(outDir, 'openapi.yaml');
-    const outJsonPath = join(outDir, 'openapi.json');
+    const outYamlPath = join(CONFIG.OUTPUT_DIR, 'openapi.yaml');
+    const outJsonPath = join(CONFIG.OUTPUT_DIR, 'openapi.json');
 
-    mkdirSync(outDir, { recursive: true });
+    mkdirSync(CONFIG.OUTPUT_DIR, { recursive: true });
 
     // YAML
     const yamlSpec = stringify(swaggerDocs);
