@@ -8,6 +8,7 @@
     "test:silent": "jest --silent",
     "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.json",
     "openapi:generate": "npm run build && node dist/scripts/generate-openapi.js",
+    "openapi:generate-infra": "npm run openapi:generate && node dist/scripts/sync-infra-openapi.js",
     "start": "node dist/server.js",
     "dev": "nodemon -r tsconfig-paths/register src/server.ts",
     "type-check": "tsc --noEmit",

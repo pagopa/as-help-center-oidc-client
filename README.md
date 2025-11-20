@@ -99,6 +99,7 @@ dist/lambda.lambdaHandler
 - `lint:fix`: Run eslint and fix all errors,
 - `format`: Runs prettier to format files
 - `openapi:generate`: Generate the OpenAPI spec in the /apidocs folder
+- `openapi:generate-infra`: Synchronize the infra OpenAPI for API Gateway based on the generated OpenAPI spec
 
 \
 <br/>
