@@ -1,0 +1,234 @@
+
+module "zone" {
+  source      = "terraform-aws-modules/route53/aws"
+  version     = "6.1.0"
+  name        = var.domain_name
+  create_zone = true
+
+  records = {
+    api = {
+      name = ""
+      type = "A"
+      alias = {
+        name                   = module.rest_api.regional_domain_name
+        zone_id                = module.rest_api.regional_zone_id
+        evaluate_target_health = true
+        ttl                    = var.dns_record_ttl
+      }
+    }
+  }
+
+  tags = {
+    Environment = "example"
+    Project     = "terraform-aws-route53"
+  }
+}
+
+
+## ACM ##
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "6.1.0"
+
+  domain_name = var.domain_name
+
+  zone_id = module.zone.id
+
+  validation_method      = "DNS"
+  create_route53_records = true
+
+  tags = {
+    Name = var.domain_name
+  }
+}
+
+data "aws_iam_policy_document" "apigw_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
+}
+
+
+## Role that allows api gateway to invoke lambda functions.
+resource "aws_iam_role" "lambda_apigw_proxy" {
+  name               = "${var.rest_api_name}-lambda-proxy"
+  assume_role_policy = data.aws_iam_policy_document.apigw_assume_role.json
+}
+
+data "aws_iam_policy_document" "lambda_apigw_proxy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["lambda:InvokeFunction"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "lambda_apigw_proxy" {
+  name        = "${var.role_prefix}-apigw-invoke-lambda"
+  description = "Lambda invoke policy"
+  policy      = data.aws_iam_policy_document.lambda_apigw_proxy.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_apigw_proxy" {
+  role       = aws_iam_role.lambda_apigw_proxy.name
+  policy_arn = aws_iam_policy.lambda_apigw_proxy.arn
+}
+
+## REST API Gateway ##
+module "rest_api" {
+  source = "../rest-api"
+
+  name                 = var.rest_api_name
+  stage_name           = var.rest_api_stage
+  xray_tracing_enabled = var.xray_tracing_enabled
+
+  endpoint_configuration = {
+    types = ["REGIONAL"]
+  }
+
+  body = templatefile(var.openapi_template_file,
+    {
+      server_url = var.domain_name
+      uri        = format("http://%s:%s", "", "8080"),
+      aws_region = var.aws_region
+      #s3_apigateway_proxy_role       = aws_iam_role.s3_apigw_proxy.arn
+      lambda_apigateway_proxy_role = aws_iam_role.lambda_apigw_proxy.arn
+      #assets_bucket_uri = format("arn:aws:apigateway:%s:s3:path/%s", var.aws_region,
+      #var.assets_bucket_name)
+  })
+
+
+  custom_domain_name        = var.domain_name
+  create_custom_domain_name = var.create_custom_domain_name
+  certificate_arn           = module.acm.acm_certificate_arn
+
+  api_cache_cluster_enabled = var.api_cache_cluster_enabled
+  api_cache_cluster_size    = var.api_cache_cluster_size
+  method_settings           = var.api_method_settings
+
+}
+
+
+# resource "aws_cloudwatch_metric_alarm" "api_alarms" {
+#   for_each            = var.api_alarms
+#   alarm_name          = format("%s-%s-%s-%s", module.rest_api.rest_api_name, each.value.resource_name, each.value.metric_name, each.value.threshold)
+#   comparison_operator = each.value.comparison_operator
+#   evaluation_periods  = each.value.evaluation_periods
+#   metric_name         = each.value.metric_name
+#   namespace           = each.value.namespace
+#   period              = each.value.period
+#   statistic           = each.value.statistic
+#   threshold           = each.value.threshold
+
+#   dimensions = {
+#     ApiName  = module.rest_api.rest_api_name
+#     Stage    = var.rest_api_stage
+#     Resource = each.value.resource_name
+#     Method   = each.value.method
+#   }
+
+#   alarm_actions = [each.value.sns_topic_alarm_arn]
+# }
+
+## Firewall regional web acl  
+resource "aws_wafv2_web_acl" "main" {
+  name        = var.web_acl.name
+  description = "Api gateway WAF."
+  scope       = "REGIONAL"
+
+  visibility_config {
+    cloudwatch_metrics_enabled = var.web_acl.cloudwatch_metrics_enabled
+    metric_name                = var.web_acl.name
+    sampled_requests_enabled   = var.web_acl.sampled_requests_enabled
+  }
+  default_action {
+    allow {}
+  }
+
+
+  dynamic "rule" {
+    for_each = { for r in local.web_acl_rules : r.name => r }
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      override_action {
+        count {}
+      }
+
+      statement {
+        managed_rule_group_statement {
+          name        = rule.value.managed_rule_group_name
+          vendor_name = rule.value.vendor_name
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = var.web_acl.cloudwatch_metrics_enabled
+        metric_name                = rule.value.metric_name
+        sampled_requests_enabled   = var.web_acl.sampled_requests_enabled
+      }
+    }
+  }
+
+  tags = { Name = var.web_acl.name }
+}
+
+resource "aws_wafv2_web_acl_association" "main" {
+  resource_arn = "arn:aws:apigateway:${var.aws_region}::/restapis/${module.rest_api.rest_api_id}/stages/${var.rest_api_stage}"
+  web_acl_arn  = aws_wafv2_web_acl.main.arn
+}
+
+##OpenApi export
+
+# data "aws_api_gateway_export" "api_exp" {
+#   rest_api_id = module.rest_api.rest_api_id
+#   stage_name  = var.rest_api_stage
+#   export_type = "oas30"
+# }
+
+# resource "aws_s3_object" "openapi_exp" {
+#   key              = "static/openapi/oas30.json"
+#   bucket           = var.assets_bucket_name
+#   content          = data.aws_api_gateway_export.api_exp.body
+#   content_encoding = "utf-8"
+#   content_type     = "application/json"
+# }
+
+## Alarm
+
+module "webacl_count_alarm" {
+  source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarms-by-multiple-dimensions"
+  version = "5.6.0"
+
+  count = var.web_acl.cloudwatch_metrics_enabled ? 1 : 0
+
+  alarm_name          = "${var.rest_api_name}-"
+  alarm_description   = "Alarm when webacl count greater than 10"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 3
+  datapoints_to_alarm = 2
+  threshold           = 10
+  period              = 300
+  unit                = "Count"
+
+  namespace   = "AWS/WAFV2"
+  metric_name = "CountedRequests"
+  statistic   = "Average"
+
+  dimensions = {
+    "webacl" = {
+      WebACL = aws_wafv2_web_acl.main.name
+      Region = var.aws_region
+      Rule   = "ALL"
+    },
+  }
+
+  alarm_actions = [var.web_acl.sns_topic_arn]
+}
+
