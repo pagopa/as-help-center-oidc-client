@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.16.0...v1.17.0) (2025-11-20)
+
+
+### Features
+
+* openapi ([#19](https://github.com/pagopa/as-help-center-oidc-client/issues/19)) ([5ba8858](https://github.com/pagopa/as-help-center-oidc-client/commit/5ba88589d920f1467d9e5eca0a10548b64a6c6f7))
+
 # [1.16.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.15.0...v1.16.0) (2025-11-18)
 
 

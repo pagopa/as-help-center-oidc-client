@@ -1,6 +1,6 @@
 {
   "name": "as-help-center-oidc-client",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "OIDC client to handle CAC help center authentication",
   "main": "dist/src/app.js",
   "scripts": {
