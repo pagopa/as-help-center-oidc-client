@@ -54,7 +54,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
   
-    environment: ${{ matrix.environment == 'prod' && format('{0}/{1}', matrix.environment, matrix.region) || matrix.environment }}
+    environment: ${{ matrix.environment }}
     env:
       WORKING_DIR: src/infra/${{ matrix.environment }}
       AWS_REGION: ${{ matrix.region }}

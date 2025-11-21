@@ -30,7 +30,7 @@ jobs:
           - environment: prod
             region: eu-south-1          
 
-    environment: ${{ matrix.environment == 'prod' && format('{0}/{1}', matrix.environment, matrix.region) || matrix.environment }}
+    environment: ${{ matrix.environment }}
     
     env:
       WORKING_DIR: src/infra/${{ matrix.environment }}
