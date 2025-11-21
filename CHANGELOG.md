@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.17.0...v1.18.0) (2025-11-21)
+
+
+### Features
+
+* Create rest api and dns infra ([#20](https://github.com/pagopa/as-help-center-oidc-client/issues/20)) ([aa3fc67](https://github.com/pagopa/as-help-center-oidc-client/commit/aa3fc6751253026c336b67331f8495ac7a0e7f5f))
+
 # [1.17.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.16.0...v1.17.0) (2025-11-20)
 
 
