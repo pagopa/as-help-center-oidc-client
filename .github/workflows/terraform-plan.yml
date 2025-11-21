@@ -59,7 +59,7 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check --recursive
-        working-directory: ${{ env.WORKING_DIR }}
+        working-directory: 'src/infra'
 
       - name: Terraform Init
         id: init
