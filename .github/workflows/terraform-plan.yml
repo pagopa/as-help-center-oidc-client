@@ -48,6 +48,7 @@ jobs:
       
       - name: Read terraform version 
         id: read-version
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           echo "TERRAFORM_VERSION=`cat ../.terraform-version`" >> $GITHUB_ENV
 
