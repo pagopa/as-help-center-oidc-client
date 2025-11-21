@@ -1,19 +1,18 @@
-name: "Terraform-Plan"
+name: Terraform Plan
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'        # matches every branch
       - '!main'     # excludes main
-      - '!master'     # excludes master
     paths:
       - 'src/infra/**'
       - '!src/infra/**/*.md'
-
+    
 defaults:
   run:
     shell: bash
-    working-directory: src/infra
 
 permissions:
   id-token: write   # This is required for requesting the JWT
@@ -21,29 +20,36 @@ permissions:
 
 jobs:
   terraform:
+    name: "terraform-plan-${{ matrix.environment }}"
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        environment: [dev, prod]
-    name: "terraform-plan"
-    runs-on: ubuntu-22.04
-    environment: ${{ matrix.environment }}
+        include:
+          - environment: dev
+            region: eu-south-1          
+          - environment: prod
+            region: eu-south-1          
+
+    environment: ${{ matrix.environment == 'prod' && format('{0}/{1}', matrix.environment, matrix.region) || matrix.environment }}
+    
+    env:
+      WORKING_DIR: src/infra/${{ matrix.environment }}
+      AWS_REGION: ${{ matrix.region }}
      
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
       - name: Configure AWS Credentials
-        env:
-          AWS_REGION: eu-south-1
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
         with:
-          role-to-assume: ${{ secrets.IAM_ROLE_PLAN }}
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ vars.IAM_ROLE_IAC_PLAN }}
+          aws-region: ${{ matrix.region }}
       
       - name: Read terraform version 
         id: read-version
         run: |
-          echo "TERRAFORM_VERSION=`cat ../../.terraform-version`" >> $GITHUB_ENV
+          echo "TERRAFORM_VERSION=`cat ../.terraform-version`" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1
@@ -52,14 +58,18 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check
+        run: terraform fmt -check --recursive
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform Init
         id: init
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
-          terraform init ${{ matrix.environment }}
+          terraform init 
 
       - name: Terraform Plan
         id: plan
+        shell: bash
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
-          terraform plan ${{ matrix.environment }}
+          terraform plan 
