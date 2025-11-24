@@ -1,8 +1,6 @@
 import { SSMClient, GetParametersByPathCommand } from '@aws-sdk/client-ssm';
 import { isEmpty } from 'lodash';
 
-// SSMClient automatically uses AWS_REGION from Lambda environment
-// If running locally, falls back to default region or AWS SDK config
 const client = new SSMClient({
   region: process.env.AWS_REGION || 'eu-south-1',
 });
