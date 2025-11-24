@@ -1,10 +1,11 @@
+import type { APIGatewayProxyEventV2, Context, APIGatewayProxyResult } from 'aws-lambda';
 import serverlessExpress from '@codegenie/serverless-express';
 import { loadParametersIntoEnv } from './utils/parameterStore';
 
 let serverlessExpressInstance: any = null;
 
 // Initialize Lambda handler once per lambda lifecycle
-async function setup(event: any, context: any) {
+async function setup(event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResult> {
   await loadParametersIntoEnv();
 
   // Import app only after getting env vars, so the app reads correct env values
@@ -16,7 +17,7 @@ async function setup(event: any, context: any) {
   return serverlessExpressInstance(event, context);
 }
 
-export const lambdaHandler = (event: any, context: any) => {
+export const lambdaHandler = (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResult> => {
   // If already initialized, use the ready handler
   if (serverlessExpressInstance) {
     return serverlessExpressInstance(event, context);
