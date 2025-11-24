@@ -14,7 +14,7 @@ module.exports = {
   transformIgnorePatterns: ['node_modules/(?!uuid)', '<rootDir>/jest.setup.js', '<rootDir>/jest.config.js'],
   // coverage
   collectCoverage: true,
-  coveragePathIgnorePatterns: ['/src/utils/openapi.ts'],
+  // coveragePathIgnorePatterns: [''],
   collectCoverageFrom: [
     'src/middlewares/**/*.ts',
     'src/utils/**/*.ts',
