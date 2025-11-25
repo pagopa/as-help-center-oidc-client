@@ -47,11 +47,9 @@ jobs:
     needs: setup
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
-
     environment: ${{ matrix.environment }}
     env:
       WORKING_DIR: src/infra/${{ matrix.environment }}
-      AWS_REGION: ${{ matrix.region }}
 
     steps:
       - name: Checkout
