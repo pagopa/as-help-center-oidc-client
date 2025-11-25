@@ -13,9 +13,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # TODO code deploy action (lambda)
-  # TODO: infra action
-
   # release git
   git-release:
     runs-on: ubuntu-22.04
