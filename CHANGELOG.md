@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.18.0...v1.19.0) (2025-11-25)
+
+
+### Features
+
+* load env variables from parameter store ([#21](https://github.com/pagopa/as-help-center-oidc-client/issues/21)) ([be19a41](https://github.com/pagopa/as-help-center-oidc-client/commit/be19a41cc4a2d13ca09798088897c34e65737a64))
+
 # [1.18.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.17.0...v1.18.0) (2025-11-21)
 
 
