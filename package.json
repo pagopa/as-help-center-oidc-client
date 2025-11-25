@@ -7,6 +7,7 @@
     "test": "jest",
     "test:silent": "jest --silent",
     "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.json",
+    "package:lambda": "zip -r cac-oidc-client-lambda.zip dist/* node_modules package.json",
     "openapi:generate": "npm run build && node dist/scripts/generate-openapi.js",
     "openapi:generate-infra": "npm run openapi:generate && node dist/scripts/sync-infra-openapi.js",
     "start": "node dist/server.js",

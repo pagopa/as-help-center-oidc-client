@@ -9,8 +9,8 @@ on:
         required: true
         default: dev
         options:
-        - dev
-        - prod
+          - dev
+          - prod
   push:
     branches:
       - 'main'
@@ -22,29 +22,23 @@ defaults:
     shell: bash
 
 permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   setup:
     runs-on: ubuntu-22.04
     outputs:
-      matrix: ${{ steps.setmatrix.outputs.matrix }}
-      
-    steps:
-      - name: Set Dynamic Env Matrix
-        id: setmatrix
-        run: |
-          echo "github.ref ${{ github.ref }}"
-          echo "event name ${{ github.event_name }}"
-  
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            matrixStringifiedObject="{\"include\":[{\"environment\":\"${{ github.event.inputs.environment }}\", \"region\":\"eu-south-1\"}]}"
-          else
-            matrixStringifiedObject="{\"include\":[{\"environment\":\"dev\", \"region\":\"eu-south-1\"}, {\"environment\":\"prod\", \"region\":\"eu-south-1\"}]}"
-          fi
+      matrix: ${{ steps.env-matrix.outputs.matrix }}
 
-          echo "matrix=$matrixStringifiedObject" >> $GITHUB_OUTPUT
+    steps:
+      # set env matrix (env-region) depending on event type (push or workflow_dispatch)
+      - name: Setup environment matrix
+        id: env-matrix
+        uses: ./.github/workflows/env-matrix-setup
+        with:
+          event_name: ${{ github.event_name }}
+          environment_input: ${{ github.event.inputs.environment }}
 
   terraform:
     name: terraform apply (${{ matrix.environment }}
@@ -53,11 +47,9 @@ jobs:
     needs: setup
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
-  
     environment: ${{ matrix.environment }}
     env:
       WORKING_DIR: src/infra/${{ matrix.environment }}
-      AWS_REGION: ${{ matrix.region }}
 
     steps:
       - name: Checkout
