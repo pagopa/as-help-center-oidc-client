@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.19.0...v1.20.0) (2025-11-25)
+
+
+### Features
+
+* start lambda deploy action ([#22](https://github.com/pagopa/as-help-center-oidc-client/issues/22)) ([c29c8bf](https://github.com/pagopa/as-help-center-oidc-client/commit/c29c8bf9720f1e076d5a5870d8ae606bf5a32883))
+
 # [1.19.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.18.0...v1.19.0) (2025-11-25)
 
 
