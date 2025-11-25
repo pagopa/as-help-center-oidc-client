@@ -24,24 +24,16 @@ jobs:
   setup:
     runs-on: ubuntu-22.04
     outputs:
-      matrix: ${{ steps.setmatrix.outputs.matrix }}
+      matrix: ${{ steps.env-matrix.outputs.matrix }}
 
     # set env matrix (env-region) depending on event type (push or workflow_dispatch)
     steps:
-      - name: Set Dynamic Env Matrix
-        id: setmatrix
-        run: |
-          echo "github.ref ${{ github.ref }}"
-          echo "event name ${{ github.event_name }}"
-
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            matrixStringifiedObject="{\"include\":[{\"environment\":\"${{ github.event.inputs.environment }}\", \"region\":\"eu-south-1\"}]}"
-          else
-            matrixStringifiedObject="{\"include\":[{\"environment\":\"dev\", \"region\":\"eu-south-1\"}, {\"environment\":\"prod\", \"region\":\"eu-south-1\"}]}"
-          fi
-
-          echo "matrix=$matrixStringifiedObject" >> $GITHUB_OUTPUT
-
+      - name: Setup environment matrix
+        id: env-matrix
+        uses: ./.github/workflows/env-matrix-setup
+        with:
+          event_name: ${{ github.event_name }}
+          environment_input: ${{ github.event.inputs.environment }}
   build:
     runs-on: ubuntu-22.04
     steps:
