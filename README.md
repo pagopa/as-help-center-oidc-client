@@ -8,6 +8,7 @@
    - [Installation](#installation)
    - [Configuration](#configuration)
    - [Run the application](#run-the-application)
+   - [Lambda wrapper](#lambda-wrapper)
    - [Available scripts](#available-scripts)
 4. [Contributing](#contributing)
 
@@ -82,7 +83,7 @@ npm start
 
 This project uses the Express Lambda wrapper package `@codegenie/serverless-express` to run the Express app as an AWS Lambda function while preserving the local development workflow. This allows you to keep using Express locally and deploy the same code as a serverless Lambda without rewriting request/response handling.
 
-The Lambda handler entrypoint is the compiled `lambda` module with exported handler `lambdaHandler`:
+The Lambda handler entrypoint will be the compiled `lambda` module with exported handler `lambdaHandler`:
 
 ```
 dist/lambda.lambdaHandler
