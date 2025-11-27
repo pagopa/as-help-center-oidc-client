@@ -31,7 +31,7 @@ variable "r53_dns_zone" {
   })
 
   default = {
-    name    = "dev.cac.pagopa.it"
+    name    = "dev.auth-assistenza.pagopa.it"
     comment = "Cac dev zone."
   }
 }

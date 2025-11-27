@@ -41,6 +41,9 @@ resource "aws_route53_record" "dev_ns_record" {
   type    = "NS"
   ttl     = var.dns_record_ttl
   records = [
-    "TODO: insert dev ns record 1",
+    "ns-1569.awsdns-04.co.uk",
+    "ns-1112.awsdns-11.org",
+    "ns-1005.awsdns-61.net",
+    "ns-7.awsdns-00.com"
   ]
 }
