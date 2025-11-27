@@ -106,7 +106,7 @@ resource "aws_iam_policy" "githubiac_plan_policy" {
           "s3:PutObject",
           "s3:DeleteObject"
         ]
-        Resource = var.s3_state_bucket_arn
+        Resource = "${var.s3_state_bucket_arn}/*"
       }
     ]
   })
