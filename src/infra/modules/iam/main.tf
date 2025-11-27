@@ -106,10 +106,7 @@ resource "aws_iam_policy" "githubiac_plan_policy" {
           "s3:PutObject",
           "s3:DeleteObject"
         ]
-        Resource = "*"
-        Condition = {
-          StringEquals = { "aws:ResourceTag/Scope" : "tfstate" }
-        }
+        Resource = var.s3_state_bucket_arn
       }
     ]
   })

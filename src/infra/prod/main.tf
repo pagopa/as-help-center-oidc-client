@@ -1,10 +1,14 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_s3_bucket" "state_bucket" {
+  bucket = "terraform-backend-1764179827"
+}
 
 module "iam" {
-  source            = "../modules/iam"
-  prefix            = local.project
-  github_repository = "pagopa/as-help-center-oidc-client"
+  source              = "../modules/iam"
+  prefix              = local.project
+  github_repository   = "pagopa/as-help-center-oidc-client"
+  s3_state_bucket_arn = data.aws_s3_bucket.state_bucket.arn
 }
 
 
