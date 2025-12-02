@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.20.0...v1.21.0) (2025-12-02)
+
+
+### Features
+
+* Create prod configuration ([#23](https://github.com/pagopa/as-help-center-oidc-client/issues/23)) ([e294c62](https://github.com/pagopa/as-help-center-oidc-client/commit/e294c62d2d8eba03d95d4b74037093da75592ed1))
+
 # [1.20.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.19.0...v1.20.0) (2025-11-25)
 
 
