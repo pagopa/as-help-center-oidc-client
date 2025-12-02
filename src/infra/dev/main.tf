@@ -17,7 +17,7 @@ module "lambda" {
   account_id = data.aws_caller_identity.current.account_id
   aws_region = var.aws_region
   oidc_lambda = {
-    name                              = format("%s-oidc", local.project)
+    name                              = format("%s-oidc-client", local.project)
     filename                          = "${path.module}/../../hello-js/lambda.zip"
     cloudwatch_logs_retention_in_days = var.lambda_cloudwatch_logs_retention_in_days
     environment_variables = {
