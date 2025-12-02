@@ -7,39 +7,29 @@ data "aws_s3_bucket" "state_bucket" {
 module "iam" {
   source              = "../modules/iam"
   prefix              = local.project
-  github_repository   = "pagopa/as-help-center-oidc-client"
+  github_repository   = local.github_repository
   s3_state_bucket_arn = data.aws_s3_bucket.state_bucket.arn
 }
 
-# module "r53_zones" {
-#   source = "../modules/dns"
+module "lambda" {
+  source = "../modules/backend"
 
-#   r53_dns_zones = {
-#     (var.r53_dns_zone.name) = {
-#       comment = var.r53_dns_zone.comment
-#     }
-#   }
-#   dns_record_ttl = 3600
-#   rest_api = {
-#     regional_domain_name = module.frontend.rest_api_regional_domain_name
-#     regional_zone_id = module.frontend.rest_api_regional_zone_id
-#   }
-# }
-
-# module "network" {
-#   source   = "../../modules/network"
-#   vpc_name = format("%s-vpc", local.project)
-
-#   azs = ["eu-south-1a", "eu-south-1b", "eu-south-1c"]
-
-#   vpc_cidr                  = var.vpc_cidr
-#   vpc_private_subnets_cidr  = var.vpc_private_subnets_cidr
-#   vpc_public_subnets_cidr   = var.vpc_public_subnets_cidr
-#   vpc_internal_subnets_cidr = var.vpc_internal_subnets_cidr
-#   enable_nat_gateway        = var.enable_nat_gateway
-#   single_nat_gateway        = var.single_nat_gateway
-
-# }
+  account_id = data.aws_caller_identity.current.account_id
+  aws_region = var.aws_region
+  oidc_lambda = {
+    name                              = format("%s-oidc-client", local.project)
+    filename                          = "${path.module}/../../hello-js/lambda.zip"
+    cloudwatch_logs_retention_in_days = var.lambda_cloudwatch_logs_retention_in_days
+    environment_variables = {
+      HOST                 = var.r53_dns_zone.name
+      NODE_ENV             = "development"
+      PARAMETER_STORE_PATH = "cac-oidc-client"
+    }
+  }
+  github_repository = local.github_repository
+  env_short         = var.env_short
+  role_prefix       = local.project
+}
 
 module "frontend" {
   source = "../modules/frontend"
@@ -56,6 +46,7 @@ module "frontend" {
   cors_allow_origins = "*"
 
   api_gateway_target_arns = ["LAMBDA"]
+  oidc_lambda_arn         = module.lambda.oidc_lambda_arn
 
   aws_region                = var.aws_region
   api_cache_cluster_enabled = var.api_cache_cluster_enabled

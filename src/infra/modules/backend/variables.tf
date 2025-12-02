@@ -1,0 +1,33 @@
+variable "account_id" {
+  type        = string
+  description = "AWS Account id."
+}
+
+variable "aws_region" {
+  type        = string
+  description = "AWS Region."
+}
+
+variable "env_short" {
+  type        = string
+  description = "env short"
+}
+
+variable "role_prefix" {
+  type        = string
+  description = "IAM Role prefix."
+}
+
+variable "github_repository" {
+  type        = string
+  description = "Github repository responsible to deploy ECS tasks in the form <organization|user/repository>."
+}
+
+variable "oidc_lambda" {
+  type = object({
+    name                              = string
+    filename                          = string
+    environment_variables             = map(string)
+    cloudwatch_logs_retention_in_days = number
+  })
+}

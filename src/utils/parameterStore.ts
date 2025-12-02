@@ -10,11 +10,15 @@ type ParametersMap = Record<string, string>;
 
 const fetchAllParametersByPath = async (parameterPath: string): Promise<ParametersMap> => {
   const parameters: ParametersMap = {};
+
+  // Normalize path: ensure it starts with / and doesn't end with /
+  const normalizedPath = (parameterPath.startsWith('/') ? parameterPath : `/${parameterPath}`).replace(/\/$/, '');
+
   let nextPaginationToken: string | undefined;
 
   do {
     const command = new GetParametersByPathCommand({
-      Path: parameterPath,
+      Path: normalizedPath,
       Recursive: true,
       WithDecryption: true, // Decrypt SecureString parameters
       NextToken: nextPaginationToken,
@@ -25,7 +29,7 @@ const fetchAllParametersByPath = async (parameterPath: string): Promise<Paramete
       for (const param of response.Parameters) {
         if (param.Name && param.Value) {
           // remove path prefix (/cac-oidc-client/AUTH_JWT_SECRET -> AUTH_JWT_SECRET)
-          const paramName = param.Name.replace(`${parameterPath}/`, '');
+          const paramName = param.Name.replace(`${normalizedPath}/`, '');
           parameters[paramName] = param.Value;
         }
       }

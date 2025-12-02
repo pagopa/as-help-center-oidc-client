@@ -62,6 +62,12 @@ variable "xray_tracing_enabled" {
   default     = false
 }
 
+variable "lambda_cloudwatch_logs_retention_in_days" {
+  type        = number
+  description = "Cloudwatch log group retention days."
+  default     = 14
+}
+
 variable "api_method_settings" {
   description = "List of Api Gateway method settings."
   type = list(object({
