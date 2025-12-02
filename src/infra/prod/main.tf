@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 data "aws_s3_bucket" "state_bucket" {
-  bucket = "terraform-backend-1763050671"
+  bucket = "terraform-backend-1764179827"
 }
 
 module "iam" {
@@ -11,35 +11,6 @@ module "iam" {
   s3_state_bucket_arn = data.aws_s3_bucket.state_bucket.arn
 }
 
-# module "r53_zones" {
-#   source = "../modules/dns"
-
-#   r53_dns_zones = {
-#     (var.r53_dns_zone.name) = {
-#       comment = var.r53_dns_zone.comment
-#     }
-#   }
-#   dns_record_ttl = 3600
-#   rest_api = {
-#     regional_domain_name = module.frontend.rest_api_regional_domain_name
-#     regional_zone_id = module.frontend.rest_api_regional_zone_id
-#   }
-# }
-
-# module "network" {
-#   source   = "../../modules/network"
-#   vpc_name = format("%s-vpc", local.project)
-
-#   azs = ["eu-south-1a", "eu-south-1b", "eu-south-1c"]
-
-#   vpc_cidr                  = var.vpc_cidr
-#   vpc_private_subnets_cidr  = var.vpc_private_subnets_cidr
-#   vpc_public_subnets_cidr   = var.vpc_public_subnets_cidr
-#   vpc_internal_subnets_cidr = var.vpc_internal_subnets_cidr
-#   enable_nat_gateway        = var.enable_nat_gateway
-#   single_nat_gateway        = var.single_nat_gateway
-
-# }
 
 module "frontend" {
   source = "../modules/frontend"
@@ -66,4 +37,17 @@ module "frontend" {
   web_acl = {
     name = format("%s-webacl", local.project)
   }
+}
+
+resource "aws_route53_record" "dev_ns_record" {
+  zone_id = module.frontend.zone_id
+  name    = "dev"
+  type    = "NS"
+  ttl     = var.dns_record_ttl
+  records = [
+    "ns-1569.awsdns-04.co.uk",
+    "ns-1112.awsdns-11.org",
+    "ns-1005.awsdns-61.net",
+    "ns-7.awsdns-00.com"
+  ]
 }

@@ -5,25 +5,22 @@ module "zone" {
   name        = var.domain_name
   create_zone = true
 
-  records = {
-    api = {
-      name = ""
-      type = "A"
-      alias = {
-        name                   = module.rest_api.regional_domain_name
-        zone_id                = module.rest_api.regional_zone_id
-        evaluate_target_health = true
-        ttl                    = var.dns_record_ttl
-      }
-    }
-  }
-
   tags = {
     Environment = "example"
     Project     = "terraform-aws-route53"
   }
 }
 
+resource "aws_route53_record" "api_record" {
+  zone_id = module.zone.id
+  name    = ""
+  type    = "A"
+  alias {
+    name                   = module.rest_api.regional_domain_name
+    zone_id                = module.rest_api.regional_zone_id
+    evaluate_target_health = true
+  }
+}
 
 ## ACM ##
 module "acm" {
@@ -93,13 +90,10 @@ module "rest_api" {
 
   body = templatefile(var.openapi_template_file,
     {
-      server_url = var.domain_name
-      uri        = format("http://%s:%s", "", "8080"),
-      aws_region = var.aws_region
-      #s3_apigateway_proxy_role       = aws_iam_role.s3_apigw_proxy.arn
+      server_url                   = var.domain_name
+      aws_region                   = var.aws_region
       lambda_apigateway_proxy_role = aws_iam_role.lambda_apigw_proxy.arn
-      #assets_bucket_uri = format("arn:aws:apigateway:%s:s3:path/%s", var.aws_region,
-      #var.assets_bucket_name)
+      cac_lambda_arn               = ""
   })
 
 

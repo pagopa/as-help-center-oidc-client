@@ -18,7 +18,7 @@ variable "app_name" {
 
 variable "env_short" {
   type        = string
-  default     = "d"
+  default     = "p"
   description = "Environment short."
 }
 
@@ -31,8 +31,8 @@ variable "r53_dns_zone" {
   })
 
   default = {
-    name    = "dev.auth-assistenza.pagopa.it"
-    comment = "Cac dev zone."
+    name    = "auth-assistenza.pagopa.it"
+    comment = "Cac prod zone."
   }
 }
 
@@ -103,7 +103,7 @@ variable "tags" {
   type = map(any)
   default = {
     CreatedBy   = "Terraform"
-    Environment = "Dev"
+    Environment = "Prod"
     Owner       = "CAC"
     Source      = "https://github.com/pagopa/as-help-center-oidc-client"
     CostCenter  = "tier0"
