@@ -107,7 +107,9 @@ variable "web_acl" {
   description = "WEB acl name"
 }
 
-
+variable "oidc_lambda_arn" {
+  type = string
+}
 # variable "api_alarms" {
 #   type = map(object({
 #     metric_name         = string

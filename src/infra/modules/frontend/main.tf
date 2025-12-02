@@ -93,7 +93,7 @@ module "rest_api" {
       server_url                   = var.domain_name
       aws_region                   = var.aws_region
       lambda_apigateway_proxy_role = aws_iam_role.lambda_apigw_proxy.arn
-      cac_lambda_arn               = ""
+      cac_lambda_arn               = var.oidc_lambda_arn
   })
 
 
