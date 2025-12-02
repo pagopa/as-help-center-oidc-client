@@ -19,7 +19,7 @@ async function setup(event: APIGatewayProxyEventV2, context: Context): Promise<A
   return serverlessExpressInstance(event, context);
 }
 
-export const lambdaHandler = (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResult> => {
+export const handler = (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResult> => {
   // If already initialized, use the ready instance
   if (serverlessExpressInstance) {
     return serverlessExpressInstance(event, context);
