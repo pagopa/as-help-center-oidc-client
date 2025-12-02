@@ -89,7 +89,7 @@ module "oidc_lambda" {
   function_name          = var.oidc_lambda.name
   description            = "Lambda function oidc."
   runtime                = "nodejs22.x"
-  handler                = "index.handler"
+  handler                = "lambda.handler"
   create_package         = false
   local_existing_package = var.oidc_lambda.filename
 
