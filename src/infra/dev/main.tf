@@ -23,7 +23,7 @@ module "lambda" {
     environment_variables = {
       HOST                 = var.r53_dns_zone.name
       NODE_ENV             = "development"
-      PARAMETER_STORE_PATH = "/cac-oidc-client/"
+      PARAMETER_STORE_PATH = "cac-oidc-client"
     }
   }
   github_repository = local.github_repository

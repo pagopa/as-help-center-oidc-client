@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "oidc_lambda" {
       "ssm:List*"
     ]
     resources = [
-      "arn:aws:ssm:${var.aws_region}:${var.account_id}:parameter/PARAM/*"
+      "arn:aws:ssm:${var.aws_region}:${var.account_id}:parameter/${var.oidc_lambda.environment_variables.PARAMETER_STORE_PATH}/*"
     ]
   }
 }
