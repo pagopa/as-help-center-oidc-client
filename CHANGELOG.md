@@ -1,3 +1,10 @@
+## [1.21.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.21.0...v1.21.1) (2025-12-02)
+
+
+### Bug Fixes
+
+* Add checkout step apply wf ([#25](https://github.com/pagopa/as-help-center-oidc-client/issues/25)) ([de33fd6](https://github.com/pagopa/as-help-center-oidc-client/commit/de33fd6b96ce624fbd16506a7eba982466fd9ca7))
+
 # [1.21.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.20.0...v1.21.0) (2025-12-02)
 
 
