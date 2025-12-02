@@ -9,7 +9,7 @@
     },
     "license": {
       "name": "Apache 2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      "url": "https://www.apache.org/licenses/LICENSE-2-0.html"
     }
   },
   "servers": [
@@ -184,46 +184,25 @@
           "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${cac_lambda_arn}/invocations",
           "responses": {
             "200": {
-              "statusCode": "200",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "200"
             },
             "400": {
-              "statusCode": "400",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "400"
             },
             "401": {
-              "statusCode": "401",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "401"
             },
             "403": {
-              "statusCode": "403",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "403"
             },
             "404": {
-              "statusCode": "404",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "404"
             },
             "500": {
-              "statusCode": "500",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "500"
             },
             "503": {
-              "statusCode": "503",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "503"
             }
           }
         }
@@ -286,10 +265,7 @@
           "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${cac_lambda_arn}/invocations",
           "responses": {
             "302": {
-              "statusCode": "302",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "302"
             }
           }
         }
@@ -374,10 +350,7 @@
           "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${cac_lambda_arn}/invocations",
           "responses": {
             "200": {
-              "statusCode": "200",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "200"
             }
           }
         }
@@ -475,10 +448,7 @@
           "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${cac_lambda_arn}/invocations",
           "responses": {
             "302": {
-              "statusCode": "302",
-              "responseParameters": {
-                "method.response.header.content-type": "'integration.response.header.Content-Type'"
-              }
+              "statusCode": "302"
             }
           }
         }

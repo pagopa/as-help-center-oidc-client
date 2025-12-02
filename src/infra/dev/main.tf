@@ -18,7 +18,7 @@ module "lambda" {
   aws_region = var.aws_region
   oidc_lambda = {
     name                              = format("%s-oidc-client", local.project)
-    filename                          = "${path.module}/../../hello-js/lambda.zip"
+    filename                          = "${path.module}/../hello-js/lambda.zip"
     cloudwatch_logs_retention_in_days = var.lambda_cloudwatch_logs_retention_in_days
     environment_variables = {
       HOST                 = var.r53_dns_zone.name
