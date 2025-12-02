@@ -26,8 +26,8 @@ module "frontend" {
   dns_record_ttl     = var.dns_record_ttl
   cors_allow_origins = "*"
 
-  api_gateway_target_arns = ["LAMBDA"]
-
+  api_gateway_target_arns   = ["LAMBDA"]
+  oidc_lambda_arn           = "module.lambda.oidc_lambda_arn"
   aws_region                = var.aws_region
   api_cache_cluster_enabled = var.api_cache_cluster_enabled
   api_method_settings       = var.api_method_settings
