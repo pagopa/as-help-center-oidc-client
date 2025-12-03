@@ -9,7 +9,7 @@ export default {
     port: Number(process.env.PORT) || 3000,
     host: process.env.HOST ? `https://${process.env.HOST}` : 'https://dev.auth-assistenza.pagopa.it',
     environment: process.env.NODE_ENV || NODE_ENV_VALUES.development,
-    clientRedirectUri: `${process.env.HOST}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
+    clientRedirectUri: `${process.env.HOST ? `https://${process.env.HOST}` : 'https://dev.auth-assistenza.pagopa.it'}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
   },
 
   authJwt: {
