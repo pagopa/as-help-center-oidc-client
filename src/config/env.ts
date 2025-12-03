@@ -7,7 +7,7 @@ export default {
   projectVersion: process.env.npm_package_version,
   server: {
     port: Number(process.env.PORT) || 3000,
-    host: process.env.HOST || 'https://slightly-intent-louse.ngrok-free.app',
+    host: process.env.HOST ? `https://${process.env.HOST}` : 'https://dev.auth-assistenza.pagopa.it',
     environment: process.env.NODE_ENV || NODE_ENV_VALUES.development,
     clientRedirectUri: `${process.env.HOST}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
   },
