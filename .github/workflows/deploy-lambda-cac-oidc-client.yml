@@ -94,7 +94,7 @@ jobs:
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
         with:
           name: cac-oidc-client-lambda
-          path: ./cac-oidc-client-lambda.zip
+          path: .
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
@@ -105,7 +105,7 @@ jobs:
       # upload lambda zip to the deployment S3 bucket
       - name: Retrieve Lambda function (${{ matrix.environment }})
         run: |
-          aws s3 cp cac-oidc-client-lambda.zip s3://${{vars.LAMBDA_CODE_BUCKET_NAME}}/${{vars.LAMBDA_CAC_OIDC_CLIENT_KEY}}
+          aws s3 cp ./cac-oidc-client-lambda.zip s3://${{vars.LAMBDA_CODE_BUCKET_NAME}}/${{vars.LAMBDA_CAC_OIDC_CLIENT_KEY}}
 
       # update the Lambda function code using the S3 object just uploaded.
       - name: Deploy Lambda function (${{ matrix.environment }})
