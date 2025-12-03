@@ -25,6 +25,7 @@ runs:
       shell: bash
       run: |
         echo "github event: ${{ inputs.event_name }}"
+        echo "environment input: ${{ inputs.environment_input }}"
 
         if [ "${{ inputs.event_name }}" == "workflow_dispatch" ]; then
           matrixStringifiedObject="{\"include\":[{\"environment\":\"${{ inputs.environment_input }}\", \"region\":\"eu-south-1\"}]}"

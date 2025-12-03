@@ -75,10 +75,11 @@ data "aws_iam_policy_document" "oidc_lambda" {
     actions = [
       "ssm:Get*",
       "ssm:Describe*",
-      "ssm:List*"
+      "ssm:List*",
+      "ssm:GetParametersByPath"
     ]
     resources = [
-      "arn:aws:ssm:${var.aws_region}:${var.account_id}:parameter/${var.oidc_lambda.environment_variables.PARAMETER_STORE_PATH}/*"
+      "arn:aws:ssm:${var.aws_region}:${var.account_id}:parameter/${var.oidc_lambda.environment_variables.PARAMETER_STORE_PATH}*"
     ]
   }
 }
