@@ -2,15 +2,15 @@ name: Deploy Lambda cac-oidc-client
 permissions: {}
 
 on:
-  # push:
-  #   branches:
-  #     - 'main'
-  #   # execute action only if one or combination of these files changed
-  #   paths:
-  #     - 'src/**'
-  #     - 'package.json'
-  #     - 'package-lock.json'
-  #     - 'tsconfig*.json'
+  push:
+    branches:
+      - 'main'
+    # execute action only if one or combination of these files changed
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig*.json'
   workflow_dispatch:
     inputs:
       environment:
@@ -29,6 +29,9 @@ jobs:
 
     # set env matrix (env-region) depending on event type (push or workflow_dispatch)
     steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
       - name: Setup environment matrix
         id: env-matrix
         uses: ./.github/workflows/env-matrix-setup
@@ -37,6 +40,7 @@ jobs:
           environment_input: ${{ github.event.inputs.environment }}
   build:
     runs-on: ubuntu-22.04
+    needs: [setup]
     permissions:
       contents: read
     steps:
@@ -91,7 +95,7 @@ jobs:
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
         with:
           name: cac-oidc-client-lambda
-          path: ./cac-oidc-client-lambda.zip
+          path: .
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
@@ -102,7 +106,7 @@ jobs:
       # upload lambda zip to the deployment S3 bucket
       - name: Retrieve Lambda function (${{ matrix.environment }})
         run: |
-          aws s3 cp cac-oidc-client-lambda.zip s3://${{vars.LAMBDA_CODE_BUCKET_NAME}}/${{vars.LAMBDA_CAC_OIDC_CLIENT_KEY}}
+          aws s3 cp ./cac-oidc-client-lambda.zip s3://${{vars.LAMBDA_CODE_BUCKET_NAME}}/${{vars.LAMBDA_CAC_OIDC_CLIENT_KEY}}
 
       # update the Lambda function code using the S3 object just uploaded.
       - name: Deploy Lambda function (${{ matrix.environment }})

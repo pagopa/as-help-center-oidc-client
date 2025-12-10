@@ -12,6 +12,7 @@ variable "role_prefix" {
 variable "domain_name" {
   type        = string
   description = "DNS domain name."
+  default     = null
 }
 
 variable "create_custom_domain_name" {

@@ -47,9 +47,9 @@ function buildIntegrationFromResponses(responses: Record<string, any>) {
     // dynamic content-type from integration response header
     integrationResponses[status] = {
       statusCode: String(status),
-      responseParameters: {
-        'method.response.header.content-type': "'integration.response.header.Content-Type'",
-      },
+      // responseParameters: {
+      //   'method.response.header.content-type': "'integration.response.header.Content-Type'",
+      // },
     };
   }
 
