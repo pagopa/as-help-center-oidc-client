@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.21.1...v1.22.0) (2025-12-10)
+
+
+### Features
+
+* lambda deploy ([960a34b](https://github.com/pagopa/as-help-center-oidc-client/commit/960a34b269a24aa937908332f9878fc31b1cbc02))
+
 ## [1.21.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.21.0...v1.21.1) (2025-12-02)
 
 
