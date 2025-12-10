@@ -2,15 +2,15 @@ name: Deploy Lambda cac-oidc-client
 permissions: {}
 
 on:
-  # push:
-  #   branches:
-  #     - 'main'
-  #   # execute action only if one or combination of these files changed
-  #   paths:
-  #     - 'src/**'
-  #     - 'package.json'
-  #     - 'package-lock.json'
-  #     - 'tsconfig*.json'
+  push:
+    branches:
+      - 'main'
+    # execute action only if one or combination of these files changed
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig*.json'
   workflow_dispatch:
     inputs:
       environment:
