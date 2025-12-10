@@ -40,6 +40,7 @@ jobs:
           environment_input: ${{ github.event.inputs.environment }}
   build:
     runs-on: ubuntu-22.04
+    needs: [setup]
     permissions:
       contents: read
     steps:
