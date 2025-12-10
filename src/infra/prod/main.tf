@@ -11,6 +11,25 @@ module "iam" {
   s3_state_bucket_arn = data.aws_s3_bucket.state_bucket.arn
 }
 
+module "lambda" {
+  source = "../modules/backend"
+
+  account_id = data.aws_caller_identity.current.account_id
+  aws_region = var.aws_region
+  oidc_lambda = {
+    name                              = format("%s-oidc-client", local.project)
+    filename                          = "${path.module}/../hello-js/lambda.zip"
+    cloudwatch_logs_retention_in_days = var.lambda_cloudwatch_logs_retention_in_days
+    environment_variables = {
+      HOST                 = var.r53_dns_zone.name
+      NODE_ENV             = "production"
+      PARAMETER_STORE_PATH = "cac-oidc-client"
+    }
+  }
+  github_repository = local.github_repository
+  env_short         = var.env_short
+  role_prefix       = local.project
+}
 
 module "frontend" {
   source = "../modules/frontend"
@@ -27,7 +46,7 @@ module "frontend" {
   cors_allow_origins = "*"
 
   api_gateway_target_arns   = ["LAMBDA"]
-  oidc_lambda_arn           = "module.lambda.oidc_lambda_arn"
+  oidc_lambda_arn           = module.lambda.oidc_lambda_arn
   aws_region                = var.aws_region
   api_cache_cluster_enabled = var.api_cache_cluster_enabled
   api_method_settings       = var.api_method_settings

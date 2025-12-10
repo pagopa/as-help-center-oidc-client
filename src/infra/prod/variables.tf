@@ -36,6 +36,12 @@ variable "r53_dns_zone" {
   }
 }
 
+variable "lambda_cloudwatch_logs_retention_in_days" {
+  type        = number
+  description = "Cloudwatch log group retention days."
+  default     = 14
+}
+
 # DNS
 variable "dns_record_ttl" {
   type        = number
