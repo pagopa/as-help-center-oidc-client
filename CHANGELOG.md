@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.22.2...v1.23.0) (2025-12-10)
+
+
+### Features
+
+* skip lambda-deploy action with semantic-release commits ([#28](https://github.com/pagopa/as-help-center-oidc-client/issues/28)) ([b621b34](https://github.com/pagopa/as-help-center-oidc-client/commit/b621b344450a6a24dca10409a7b7986849e99580))
+
 ## [1.22.2](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.22.1...v1.22.2) (2025-12-10)
 
 
