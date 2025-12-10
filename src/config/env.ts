@@ -7,9 +7,9 @@ export default {
   projectVersion: process.env.npm_package_version,
   server: {
     port: Number(process.env.PORT) || 3000,
-    host: process.env.HOST ? `https://${process.env.HOST}` : 'https://dev.auth-assistenza.pagopa.it',
+    host: getHost(),
     environment: process.env.NODE_ENV || NODE_ENV_VALUES.development,
-    clientRedirectUri: `${process.env.HOST ? `https://${process.env.HOST}` : 'https://dev.auth-assistenza.pagopa.it'}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
+    clientRedirectUri: `${getHost()}/${process.env.CLIENT_REDIRECT_URI || 'auth/callback'}`,
   },
 
   authJwt: {
@@ -51,6 +51,14 @@ export default {
     pagopaBrandId: process.env.PAGOPA_BRAND_ID ?? throwMissingRequiredEnvVar('PAGOPA_BRAND_ID'),
   },
 };
+
+function getHost(): string {
+  const raw = process.env.HOST;
+  const defaultHost = 'https://dev.auth-assistenza.pagopa.it';
+  if (!raw || raw.trim() === '') return defaultHost;
+  if (raw.startsWith('https://')) return raw;
+  return `https://${raw}`;
+}
 
 function buildOidcScopes() {
   const scopesCommaSeparated = process.env.OIDC_SCOPES || 'openid';
