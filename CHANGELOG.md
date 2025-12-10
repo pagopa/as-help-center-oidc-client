@@ -1,3 +1,10 @@
+## [1.22.2](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.22.1...v1.22.2) (2025-12-10)
+
+
+### Bug Fixes
+
+* Refactor lambda name ([#29](https://github.com/pagopa/as-help-center-oidc-client/issues/29)) ([7b9f545](https://github.com/pagopa/as-help-center-oidc-client/commit/7b9f54547a83a7655292d64a8e0b2c502245d623))
+
 ## [1.22.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.22.0...v1.22.1) (2025-12-10)
 
 
