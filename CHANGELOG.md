@@ -1,3 +1,10 @@
+## [1.22.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.22.0...v1.22.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* Update terraform lock ([#27](https://github.com/pagopa/as-help-center-oidc-client/issues/27)) ([78c61b7](https://github.com/pagopa/as-help-center-oidc-client/commit/78c61b79c629fc5ffa23c2427effdf2bd169f562))
+
 # [1.22.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.21.1...v1.22.0) (2025-12-10)
 
 
