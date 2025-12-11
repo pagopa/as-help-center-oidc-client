@@ -15,7 +15,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'src/infra/**'
+      - 'infra/**'
 
 defaults:
   run:
@@ -52,7 +52,7 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     environment: ${{ matrix.environment }}
     env:
-      WORKING_DIR: src/infra/${{ matrix.environment }}
+      WORKING_DIR: infra/${{ matrix.environment }}
 
     steps:
       - name: Checkout
