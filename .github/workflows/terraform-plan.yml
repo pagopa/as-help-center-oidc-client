@@ -4,38 +4,38 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - '**'        # matches every branch
-      - '!main'     # excludes main
+      - '**' # matches every branch
+      - '!main' # excludes main
     paths:
-      - 'src/infra/**'
-      - '!src/infra/**/*.md'
-    
+      - 'infra/**'
+      - '!infra/**/*.md'
+
 defaults:
   run:
     shell: bash
 
 permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   terraform:
-    name: "terraform-plan-${{ matrix.environment }}"
+    name: 'terraform-plan-${{ matrix.environment }}'
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
           - environment: dev
-            region: eu-south-1          
+            region: eu-south-1
           - environment: prod
-            region: eu-south-1          
+            region: eu-south-1
 
     environment: ${{ matrix.environment }}
-    
+
     env:
-      WORKING_DIR: src/infra/${{ matrix.environment }}
+      WORKING_DIR: infra/${{ matrix.environment }}
       AWS_REGION: ${{ matrix.region }}
-     
+
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
@@ -45,8 +45,8 @@ jobs:
         with:
           role-to-assume: ${{ vars.IAM_ROLE_IAC_PLAN }}
           aws-region: ${{ matrix.region }}
-      
-      - name: Read terraform version 
+
+      - name: Read terraform version
         id: read-version
         working-directory: ${{ env.WORKING_DIR }}
         run: |
@@ -60,17 +60,17 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check --recursive
-        working-directory: 'src/infra'
+        working-directory: 'infra'
 
       - name: Terraform Init
         id: init
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          terraform init 
+          terraform init
 
       - name: Terraform Plan
         id: plan
         shell: bash
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          terraform plan 
+          terraform plan

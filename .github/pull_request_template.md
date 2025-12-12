@@ -39,7 +39,7 @@
 
 #### API docs notes
 
-If you add or modify any API endpoints, remember to regenerate the OpenAPI documentation so that the files (`openapi/openapi.yaml` and `openapi/openapi.json`) are up to date, and to update the infra OpenAPI for API Gateway (`src/infra/api/cac.tpl.json`).
+If you add or modify any API endpoints, remember to regenerate the OpenAPI documentation so that the files (`openapi/openapi.yaml` and `openapi/openapi.json`) are up to date, and to update the infra OpenAPI for API Gateway (`infra/api/cac.tpl.json`).
 
 To do this automatically (generate OpenApi spec files and synchronize the infra API gtw OpenAPI) run locally:
 

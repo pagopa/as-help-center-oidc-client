@@ -8,7 +8,7 @@ const CONFIG = {
 
   // File paths
   INPUT_OPENAPI_PATH: join(process.cwd(), 'apidocs', 'openapi.json'),
-  OUTPUT_PATH: join(process.cwd(), 'src', 'infra', 'api', 'cac.tpl.json'),
+  OUTPUT_PATH: join(process.cwd(), 'infra', 'api', 'cac.tpl.json'),
 
   // AWS API Gateway integration variables
   LAMBDA_ROLE: '${lambda_apigateway_proxy_role}',

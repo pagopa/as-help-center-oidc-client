@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "CAC OIDC client",
-    "version": "1.21.1",
+    "version": "1.23.0",
     "description": "OIDC client to handle CAC help center authentication",
     "contact": {
       "email": "team-cac@pagopa.it"
