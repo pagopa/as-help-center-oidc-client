@@ -1,4 +1,3 @@
-import { JwtPayload } from 'jsonwebtoken';
 import { IdTokenClaims } from 'openid-client';
 
 export type ExtraStateData = {
@@ -11,14 +10,14 @@ export type StateAndNonce = {
   nonce: string;
 };
 
-export type StateJwtPayload = JwtPayload & {
-  timestamp?: number;
-  createdAt?: string;
-  stateValue: string;
+export interface AuthSessionRecord {
+  state: string; // PK
   nonce: string;
   return_to_url: string;
   contact_email: string;
-};
+  createdAt: string;
+  ttl: number; // Unix timestamp for TTL expiration
+}
 
 export type AccessTokenClaims = IdTokenClaims & {
   name?: string;

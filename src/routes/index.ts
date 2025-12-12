@@ -31,7 +31,7 @@ const devRoutes = [
   },
 ];
 
-if (config.server.environment === NODE_ENV_VALUES.development) {
+if (config.server.environment === NODE_ENV_VALUES.local) {
   devRoutes.forEach((route) => {
     expressRouter.use(route.path, route.router);
   });

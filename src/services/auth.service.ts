@@ -5,7 +5,7 @@ import config from '@config/env';
 import { loginFormAutoSubmit } from '@utils/zendeskRedirect';
 import { ApiError } from '@errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
-import { AccessTokenClaims, StateJwtPayload } from 'src/types/auth.types';
+import { AccessTokenClaims, AuthSessionRecord } from 'src/types/auth.types';
 import { CallbackParamsType } from 'openid-client';
 import { sanitizedReturnTo } from '@utils/brandUtils';
 import { validateEmailDomain } from '@utils/utils';
@@ -17,8 +17,8 @@ export const generateAuthenticationUrlForLogin = async (returnTo: string, contac
     throw new ApiError('Invalid or unreachable email domain', StatusCodes.BAD_REQUEST, ERROR_CODES.INVALID_EMAIL);
   }
 
-  // generate state and nonce
-  const { state, nonce } = securityCheckManager.createStateAndNonce({
+  // generate state and nonce, and save to DynamoDB
+  const { state, nonce } = await securityCheckManager.createStateAndNonce({
     return_to_url: returnTo,
     contact_email: contactEmail,
   });
@@ -39,10 +39,10 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     throw new ApiError('Missing code required parameters', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
-  // Validate state
-  let statePayload: StateJwtPayload;
+  // Validate state and retrieve auth session record
+  let authSessionRecord: AuthSessionRecord;
   try {
-    statePayload = securityCheckManager.validateAndGetState(state);
+    authSessionRecord = await securityCheckManager.validateStateAndGetAuthSession(state);
   } catch (stateError) {
     console.error('State validation error:', stateError);
     throw new ApiError('State validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
@@ -52,8 +52,8 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   let claims: AccessTokenClaims;
   try {
     const tokenSet = await oidcClient.handleCallback(callbackParams, {
-      state,
-      nonce: statePayload.nonce,
+      state: state!,
+      nonce: authSessionRecord.nonce,
     });
     claims = tokenSet.claims;
   } catch (tokenExchangeError) {
@@ -63,7 +63,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
 
   // Additional nonce validation (optional, it should be already done from openid-client lib)
   try {
-    securityCheckManager.validateNonce(statePayload.nonce, claims.nonce);
+    securityCheckManager.validateNonce(authSessionRecord.nonce, claims.nonce);
   } catch (nonceError) {
     console.error('Nonce validation error:', nonceError);
     throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
@@ -73,7 +73,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   const jwtAccess = JwtAuthService.generateAuthJwt(
     `${claims.name} ${claims.familyName}`,
     config.authJwt.jwtTokenOrganizationClaim,
-    statePayload.contact_email,
+    authSessionRecord.contact_email,
     claims.fiscalNumber,
   );
 
@@ -81,6 +81,6 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   return loginFormAutoSubmit(
     config.authJwt.loginActionEndpoint,
     jwtAccess,
-    sanitizedReturnTo(statePayload.return_to_url),
+    sanitizedReturnTo(authSessionRecord.return_to_url),
   );
 };
