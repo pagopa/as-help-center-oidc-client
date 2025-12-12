@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.23.0...v1.24.0) (2025-12-12)
+
+
+### Features
+
+* infra folder refactor ([#30](https://github.com/pagopa/as-help-center-oidc-client/issues/30)) ([47472b3](https://github.com/pagopa/as-help-center-oidc-client/commit/47472b352a6ada21320108edcf37a77c95ff5ac0))
+
 # [1.23.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.22.2...v1.23.0) (2025-12-10)
 
 
