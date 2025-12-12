@@ -28,7 +28,7 @@ describe('auth.service', () => {
       const mockNonce = 'generated-nonce';
       const mockAuthUrl = 'https://auth.example.com/authorize';
 
-      (securityCheckManager.createStateAndNonce as jest.Mock).mockReturnValue({
+      (securityCheckManager.createStateAndNonce as jest.Mock).mockResolvedValue({
         state: mockState,
         nonce: mockNonce,
       });
@@ -77,11 +77,11 @@ describe('auth.service', () => {
       nonce: 'nonce-value',
     };
 
-    it('should successfully process valid callback', async () => {
+    it('should successfully process valid callback with atomic state deletion', async () => {
       const mockJwtToken = 'generated.jwt.token';
       const mockHtmlForm = '<html>...</html>';
 
-      (securityCheckManager.validateAndGetState as jest.Mock).mockReturnValue(mockStatePayload);
+      (securityCheckManager.validateStateAndGetAuthSession as jest.Mock).mockResolvedValue(mockStatePayload);
       (oidcClient.handleCallback as jest.Mock).mockResolvedValue({ claims: mockClaims });
       (securityCheckManager.validateNonce as jest.Mock).mockReturnValue(undefined);
       (JwtAuthService.generateAuthJwt as jest.Mock).mockReturnValue(mockJwtToken);
@@ -89,7 +89,7 @@ describe('auth.service', () => {
 
       const result = await authService.handleLoginCallbackAndGenerateAutoSubmitForm(mockParams);
 
-      expect(securityCheckManager.validateAndGetState).toHaveBeenCalledWith(mockParams.state);
+      expect(securityCheckManager.validateStateAndGetAuthSession).toHaveBeenCalledWith(mockParams.state);
       expect(oidcClient.handleCallback).toHaveBeenCalledWith(mockParams, {
         state: mockParams.state,
         nonce: mockStatePayload.nonce,
@@ -107,6 +107,7 @@ describe('auth.service', () => {
         mockStatePayload.return_to_url,
       );
       expect(result).toBe(mockHtmlForm);
+      // Note: state is atomically deleted during validateStateAndGetAuthSession to prevent replay attacks
     });
 
     it('should throw ApiError when provider returns error', async () => {
@@ -133,9 +134,7 @@ describe('auth.service', () => {
     });
 
     it('should throw ApiError when state validation fails', async () => {
-      (securityCheckManager.validateAndGetState as jest.Mock).mockImplementation(() => {
-        throw new Error('Invalid state');
-      });
+      (securityCheckManager.validateStateAndGetAuthSession as jest.Mock).mockRejectedValue(new Error('Invalid state'));
 
       await expect(authService.handleLoginCallbackAndGenerateAutoSubmitForm(mockParams)).rejects.toThrow(ApiError);
       await expect(authService.handleLoginCallbackAndGenerateAutoSubmitForm(mockParams)).rejects.toThrow(
@@ -144,7 +143,7 @@ describe('auth.service', () => {
     });
 
     it('should throw ApiError when token exchange fails', async () => {
-      (securityCheckManager.validateAndGetState as jest.Mock).mockReturnValue(mockStatePayload);
+      (securityCheckManager.validateStateAndGetAuthSession as jest.Mock).mockResolvedValue(mockStatePayload);
       (oidcClient.handleCallback as jest.Mock).mockRejectedValue(new Error('Token exchange failed'));
 
       await expect(authService.handleLoginCallbackAndGenerateAutoSubmitForm(mockParams)).rejects.toThrow(ApiError);
@@ -154,7 +153,7 @@ describe('auth.service', () => {
     });
 
     it('should throw ApiError when nonce validation fails', async () => {
-      (securityCheckManager.validateAndGetState as jest.Mock).mockReturnValue(mockStatePayload);
+      (securityCheckManager.validateStateAndGetAuthSession as jest.Mock).mockResolvedValue(mockStatePayload);
       (oidcClient.handleCallback as jest.Mock).mockResolvedValue({ claims: mockClaims });
       (securityCheckManager.validateNonce as jest.Mock).mockImplementation(() => {
         throw new Error('Invalid nonce');
