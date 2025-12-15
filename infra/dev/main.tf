@@ -11,6 +11,13 @@ module "iam" {
   s3_state_bucket_arn = data.aws_s3_bucket.state_bucket.arn
 }
 
+module "database" {
+  source = "../modules/database"
+  cac-oidc-auth-session-table = {
+    deletion_protection_enabled = var.cac-oidc-auth-session.deletion_protection_enabled
+  }
+}
+
 module "lambda" {
   source = "../modules/backend"
 
@@ -25,6 +32,7 @@ module "lambda" {
       NODE_ENV             = "development"
       PARAMETER_STORE_PATH = "cac-oidc-client"
     }
+    table_cac_oidc_auth_session_arn = module.database.table_cac_oidc_auth_session_arn
   }
   github_repository = local.github_repository
   env_short         = var.env_short
