@@ -29,5 +29,6 @@ variable "oidc_lambda" {
     filename                          = string
     environment_variables             = map(string)
     cloudwatch_logs_retention_in_days = number
+    table_cac_oidc_auth_session_arn   = optional(string, "")
   })
 }

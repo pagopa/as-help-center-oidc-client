@@ -68,7 +68,18 @@ data "aws_iam_policy_document" "oidc_lambda" {
     actions   = ["cloudwatch:PutMetricData"]
     resources = ["*"]
   }
-
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:Query",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+    ]
+    resources = [
+      var.oidc_lambda.table_cac_oidc_auth_session_arn
+    ]
+  }
   statement {
     sid    = "SSMGetParameters"
     effect = "Allow"
