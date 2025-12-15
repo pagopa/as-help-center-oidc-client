@@ -54,7 +54,7 @@ export default {
   dynamodb: {
     tableName: process.env.DYNAMODB_TABLE_NAME ?? throwMissingRequiredEnvVar('DYNAMODB_TABLE_NAME'),
     region: process.env.AWS_REGION || 'eu-south-1',
-    stateTtlSeconds: Number(process.env.STATE_TTL_SECONDS) || 300, // 5 minutes default
+    stateTtlSeconds: Number(process.env.STATE_TTL_SECONDS) || 180, // 3 minutes default
     endpoint: process.env.DYNAMODB_ENDPOINT || 'http://localhost:8000', // only for local development
   },
 };

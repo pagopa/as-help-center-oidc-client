@@ -51,8 +51,8 @@ describe('dynamodb.service', () => {
       expect(item.return_to_url).toBe(mockRecord.return_to_url);
       expect(item.contact_email).toBe(mockRecord.contact_email);
       expect(item.createdAt).toBe(mockRecord.createdAt);
-      expect(item.ttl).toBeGreaterThanOrEqual(beforeCallTime + 299); // Allow 1 second buffer before
-      expect(item.ttl).toBeLessThanOrEqual(afterCallTime + 301); // Allow 1 second buffer after
+      expect(item.ttl).toBeGreaterThanOrEqual(beforeCallTime + 179); // Allow 1 second buffer before
+      expect(item.ttl).toBeLessThanOrEqual(afterCallTime + 181); // Allow 1 second buffer after
     });
 
     it('should handle DynamoDB errors', async () => {
