@@ -13,8 +13,9 @@ module "dynamodb_table_cac_oidc_auth_session" {
     }
   ]
 
-  billing_mode = "PAY_PER_REQUEST"
-
+  billing_mode                = "PAY_PER_REQUEST"
+  ttl_attribute_name          = "ttl"
+  ttl_enabled                 = var.cac-oidc-auth-session-table.ttl_enabled
   deletion_protection_enabled = var.cac-oidc-auth-session-table.deletion_protection_enabled
   tags = {
     Name = "cac-oidc-auth-session"

@@ -159,9 +159,11 @@ variable "api_alarms" {
 variable "cac-oidc-auth-session" {
   type = object({
     deletion_protection_enabled = optional(bool, false)
+    ttl_enabled                 = optional(bool, true)
   })
   description = "Cac oidc auth sessions table."
   default = {
     deletion_protection_enabled = false
+    ttl_enabled                 = true
   }
 }
