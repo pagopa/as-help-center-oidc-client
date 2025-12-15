@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.24.0...v1.25.0) (2025-12-15)
+
+
+### Features
+
+* Create dynamodb infra ([#32](https://github.com/pagopa/as-help-center-oidc-client/issues/32)) ([d5332e4](https://github.com/pagopa/as-help-center-oidc-client/commit/d5332e47067f2cc506a954b9336f88d4af42da72))
+
 # [1.24.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.23.0...v1.24.0) (2025-12-12)
 
 
