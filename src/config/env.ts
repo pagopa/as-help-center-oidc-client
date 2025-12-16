@@ -50,6 +50,13 @@ export default {
     sendBrandId: process.env.SEND_BRAND_ID ?? throwMissingRequiredEnvVar('SEND_BRAND_ID'),
     pagopaBrandId: process.env.PAGOPA_BRAND_ID ?? throwMissingRequiredEnvVar('PAGOPA_BRAND_ID'),
   },
+
+  dynamodb: {
+    tableName: process.env.DYNAMODB_TABLE_NAME ?? throwMissingRequiredEnvVar('DYNAMODB_TABLE_NAME'),
+    region: process.env.AWS_REGION || 'eu-south-1',
+    stateTtlSeconds: Number(process.env.STATE_TTL_SECONDS) || 180, // 3 minutes default
+    endpoint: process.env.DYNAMODB_ENDPOINT || 'http://localhost:8000', // only for local development
+  },
 };
 
 function getHost(): string {

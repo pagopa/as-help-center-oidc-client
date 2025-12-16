@@ -54,7 +54,7 @@ export function generateAuthUrl(state: string, nonce: string, additionalParams: 
 // handle callback and exchange auth code with tokens
 export async function handleCallback(
   callbackParams: CallbackParamsType,
-  checks: { state?: string; nonce?: string },
+  checks: { state: string; nonce: string },
 ): Promise<ExchangedTokenSet> {
   const client = getClientOrThrow();
   const tokenSet = await client.callback(config.server.clientRedirectUri, callbackParams, checks);

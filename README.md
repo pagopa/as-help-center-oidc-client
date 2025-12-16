@@ -79,6 +79,25 @@ npm run build
 npm start
 ```
 
+#### Local Development with DynamoDB
+
+For local development, you need to run DynamoDB Local:
+
+```bash
+# Start DynamoDB Local and DynamoDB Admin UI
+cd docker
+docker-compose -f docker-compose-dynamodb.yml up -d
+
+# Create the table (first time only)
+./init-dynamodb-table.sh
+
+# Optional: Access DynamoDB Admin UI at http://localhost:8001
+```
+
+For more info read [here](docker/README.md).
+
+**Note**: DynamoDB Local uses fake credentials - no real AWS credentials are needed for local development.
+
 ### Lambda wrapper
 
 This project uses the Express Lambda wrapper package `@codegenie/serverless-express` to run the Express app as an AWS Lambda function while preserving the local development workflow. This allows you to keep using Express locally and deploy the same code as a serverless Lambda without rewriting request/response handling.

@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.1.0",
+    "@aws-sdk/client-dynamodb": "^3.936.0",
     "@aws-sdk/client-ssm": "^3.936.0",
+    "@aws-sdk/lib-dynamodb": "^3.936.0",
     "@codegenie/serverless-express": "^4.17.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
