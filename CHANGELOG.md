@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.25.0...v1.26.0) (2025-12-16)
+
+
+### Features
+
+* Add dynamodb to prod env ([#33](https://github.com/pagopa/as-help-center-oidc-client/issues/33)) ([eabcc69](https://github.com/pagopa/as-help-center-oidc-client/commit/eabcc697b58a9bb4c2a75e8e82c9e2f4dc8ea1fd))
+
 # [1.25.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.24.0...v1.25.0) (2025-12-15)
 
 
