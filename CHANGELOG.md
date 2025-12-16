@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.26.0...v1.27.0) (2025-12-16)
+
+
+### Features
+
+* add dynamodb for state and nonce ([#31](https://github.com/pagopa/as-help-center-oidc-client/issues/31)) ([0c3c919](https://github.com/pagopa/as-help-center-oidc-client/commit/0c3c919a0765011d623fba2d9682dd0df7691509))
+
 # [1.26.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.25.0...v1.26.0) (2025-12-16)
 
 
