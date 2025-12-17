@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.27.0...v1.27.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* lambda init race condition ([#35](https://github.com/pagopa/as-help-center-oidc-client/issues/35)) ([6295c7a](https://github.com/pagopa/as-help-center-oidc-client/commit/6295c7ab0258e36fdf3d05d3bd306815511feec6))
+
 # [1.27.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.26.0...v1.27.0) (2025-12-16)
 
 
