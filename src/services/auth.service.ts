@@ -8,8 +8,9 @@ import { StatusCodes } from 'http-status-codes';
 import { AccessTokenClaims, AuthSessionRecord } from 'src/types/auth.types';
 import { CallbackParamsType } from 'openid-client';
 import { sanitizedReturnTo } from '@utils/brandUtils';
-import { validateEmailDomain } from '@utils/utils';
+import { hashPII, validateEmailDomain } from '@utils/utils';
 import { ERROR_CODES } from '@utils/constants';
+import { log } from '@utils/logger';
 
 export const generateAuthenticationUrlForLogin = async (returnTo: string, contactEmail: string): Promise<string> => {
   const isEmailDomainValid = await validateEmailDomain(contactEmail);
@@ -31,7 +32,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
 
   // Manage provider errors
   if (error) {
-    console.error('OIDC Provider error:', error, error_description);
+    log.error({ error, error_description }, 'OIDC Provider error');
     throw new ApiError('Authorization failed', StatusCodes.BAD_REQUEST, ERROR_CODES.PROVIDER_ERROR);
   }
 
@@ -44,7 +45,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   try {
     authSessionRecord = await securityCheckManager.validateStateAndGetAuthSession(state);
   } catch (stateError) {
-    console.error('State validation error:', stateError);
+    log.error({ err: stateError, state }, 'State validation error');
     throw new ApiError('State validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
@@ -57,7 +58,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     });
     claims = tokenSet.claims;
   } catch (tokenExchangeError) {
-    console.error('Token exchange error:', tokenExchangeError);
+    log.error({ err: tokenExchangeError }, 'Token exchange error');
     throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
@@ -65,7 +66,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   try {
     securityCheckManager.validateNonce(authSessionRecord.nonce, claims.nonce);
   } catch (nonceError) {
-    console.error('Nonce validation error:', nonceError);
+    log.error({ err: nonceError }, 'Nonce validation error');
     throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
@@ -78,6 +79,12 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   );
 
   // generate login form auto submit HTML
+  log.info(
+    {
+      emailHash: hashPII(authSessionRecord.contact_email),
+    },
+    'Login flow completed successfully',
+  );
   return loginFormAutoSubmit(
     config.authJwt.loginActionEndpoint,
     jwtAccess,

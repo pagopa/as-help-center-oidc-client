@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { CallbackReqParam } from '@dtos/auth/callback.dto';
 import { ExchangedTokenSet } from 'src/types/auth.types';
 import { validateRequiredFields } from '@utils/utils';
+import { log } from '@utils/logger';
 
 let client: Client | null = null;
 
@@ -26,10 +27,10 @@ export function initializeClient() {
         response_types: ['code'],
       });
 
-      console.log('OIDC Client initialized successfully');
+      log.info({ issuer: config.oidc.issuer }, 'OIDC Client initialized successfully');
     }
   } catch (error) {
-    console.error('OIDC Client initialization failed:', error);
+    log.error({ err: error, issuer: config.oidc.issuer }, 'OIDC Client initialization failed');
     throw error;
   }
 }

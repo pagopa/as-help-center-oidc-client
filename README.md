@@ -36,6 +36,7 @@ The project is managed via a CI/CD pipeline that ensures code integrity and effi
 - Jest
 - OpenID Connect Client
 - DynamoDB
+- pino
 - AWS
 - Github Actions
 - Terraform

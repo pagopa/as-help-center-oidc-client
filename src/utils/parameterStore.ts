@@ -1,5 +1,6 @@
 import { SSMClient, GetParametersByPathCommand } from '@aws-sdk/client-ssm';
 import { isEmpty } from 'lodash';
+import { log } from './logger';
 
 const client = new SSMClient({
   region: process.env.AWS_REGION || 'eu-south-1',
@@ -60,8 +61,6 @@ export async function loadParametersIntoEnv(): Promise<void> {
   const parameterPath = process.env.PARAMETER_STORE_PATH;
 
   try {
-    console.info(`[ParameterStore] Loading from path: ${parameterPath}`);
-
     if (!parameterPath) {
       throw new Error('PARAMETER_STORE_PATH is required');
     }
@@ -69,10 +68,13 @@ export async function loadParametersIntoEnv(): Promise<void> {
     const parameters = await fetchAllParametersByPath(parameterPath);
     populateEnvVariables(parameters);
 
-    console.info(`[ParameterStore] Loaded ${Object.keys(parameters).length} parameters`);
+    log.info(
+      { parameterCount: Object.keys(parameters).length, parameterPath },
+      'Parameters loaded from Parameter Store',
+    );
     loaded = true;
   } catch (err) {
-    console.error('[ParameterStore] Failed to load parameters', err);
+    log.error({ err, parameterPath }, 'Failed to load parameters from Parameter Store');
     throw err;
   }
 }

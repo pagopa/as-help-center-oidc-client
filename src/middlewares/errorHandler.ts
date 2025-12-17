@@ -5,15 +5,16 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { ERROR_CODES } from '@utils/constants';
 import { ZodError } from 'zod';
 import { isEmpty } from 'lodash';
+import { log } from '@utils/logger';
 
-const printError = (error: unknown, envValues: Array<string> = []) => {
+const printError = (error: unknown, path?: string, envValues: Array<string> = []) => {
   if (isEmpty(envValues) || envValues.includes(env.server.environment)) {
-    console.error('Error', error);
+    log.error({ err: error, path: path }, 'Request error');
   }
 };
 
 export function errorHandler(error: unknown, req: Request, res: Response, _next: NextFunction) {
-  printError(error);
+  printError(error, req.path);
 
   let errorResponse: ApiError;
   if (error instanceof ZodError) {
@@ -32,7 +33,7 @@ export function errorHandler(error: unknown, req: Request, res: Response, _next:
     );
   }
 
-  errorResponse.setPath(req.originalUrl);
+  errorResponse.setPath(req.path);
 
   if (errorResponse.isRedirect === false) {
     res.status(errorResponse.statusCode).json(errorResponse.toJSON());
