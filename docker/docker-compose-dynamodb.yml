@@ -11,7 +11,7 @@ services:
       - dynamodb-data:/home/dynamodblocal/data
     working_dir: /home/dynamodblocal
 
-  # Optional: DynamoDB Admin UI for easier debugging
+  # DynamoDB Admin UI
   dynamodb-admin:
     image: aaronshaf/dynamodb-admin:latest@sha256:46d9c7f5234688481a807987113ab068acaa11fd7057c9bb84ef181f492a0194
     container_name: cac-oidc-dynamodb-admin

@@ -8,6 +8,7 @@
    - [Installation](#installation)
    - [Configuration](#configuration)
    - [Run the application](#run-the-application)
+     - [Local Development with DynamoDB](#local-development-with-dynamodb)
    - [Lambda wrapper](#lambda-wrapper)
    - [Available scripts](#available-scripts)
 4. [Contributing](#contributing)
@@ -34,6 +35,7 @@ The project is managed via a CI/CD pipeline that ensures code integrity and effi
 - ZOD
 - Jest
 - OpenID Connect Client
+- DynamoDB
 - AWS
 - Github Actions
 - Terraform
