@@ -4,20 +4,27 @@ import * as authService from '@services/auth.service';
 import * as oidcClient from '@services/oidcClient.service';
 import { getErrorPageFromBrandId, sanitizedReturnTo } from '@utils/brandUtils';
 import { sanitizeLogMessage } from '@utils/utils';
+import { log } from '@utils/logger';
 
 jest.mock('@services/auth.service');
 jest.mock('@services/oidcClient.service');
 jest.mock('@utils/brandUtils');
 jest.mock('@utils/utils');
+jest.mock('@utils/logger', () => ({
+  log: {
+    info: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+    warn: jest.fn(),
+  },
+}));
 
 describe('auth.controller', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
-  let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
     mockResponse = {
       redirect: jest.fn(),
@@ -25,10 +32,6 @@ describe('auth.controller', () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
-  });
-
-  afterEach(() => {
-    consoleErrorSpy.mockRestore();
   });
 
   describe('login', () => {
@@ -95,11 +98,14 @@ describe('auth.controller', () => {
 
       await logout(mockRequest as any, mockResponse as Response);
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith({
-        event: 'zendesk_login_error',
-        brand_id,
-        message,
-      });
+      expect(log.error).toHaveBeenCalledWith(
+        {
+          event: 'zendesk_login_error',
+          brand_id,
+          message,
+        },
+        'Zendesk login error during logout',
+      );
       expect(sanitizeLogMessage).toHaveBeenCalledWith(message);
       expect(getErrorPageFromBrandId).toHaveBeenCalledWith(return_to);
       expect(mockResponse.redirect).toHaveBeenCalledWith(mockErrorPage);
@@ -121,7 +127,7 @@ describe('auth.controller', () => {
 
       expect(sanitizedReturnTo).toHaveBeenCalledWith(return_to);
       expect(mockResponse.redirect).toHaveBeenCalledWith(sanitizedUrl);
-      expect(consoleErrorSpy).not.toHaveBeenCalled();
+      expect(log.error).not.toHaveBeenCalled();
     });
   });
 });

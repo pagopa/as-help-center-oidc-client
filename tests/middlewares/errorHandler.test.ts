@@ -8,7 +8,7 @@ describe('Error handler middleware', () => {
   let req: any, res: any, next: any;
 
   beforeEach(() => {
-    req = { originalUrl: '/test-route' };
+    req = { path: '/test-route' };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
