@@ -9,7 +9,11 @@ import * as authService from '@services/auth.service';
 
 export const login = async (req: Request<{}, {}, {}, LoginReqParam>, res: Response) => {
   const { return_to, contact_email, brand_id } = req.query;
-  console.log('Login request received', `emailHash: ${hashPII(contact_email)}`, `brandId: ${brand_id}`);
+  console.log(
+    'Login request received',
+    `emailHash: ${hashPII(contact_email)}`,
+    `brandId: ${sanitizeLogMessage(brand_id)}`,
+  );
   // generate authUrl
   const authUrl = await authService.generateAuthenticationUrlForLogin(return_to, contact_email);
 
