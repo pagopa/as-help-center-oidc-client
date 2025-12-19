@@ -34,9 +34,10 @@ module "lambda" {
     }
     table_cac_oidc_auth_session_arn = module.database.table_cac_oidc_auth_session_arn
   }
-  github_repository = local.github_repository
-  env_short         = var.env_short
-  role_prefix       = local.project
+  kms_auth_session_table_alias_arn = module.database.kms_auth_session_table_alias_arn
+  github_repository                = local.github_repository
+  env_short                        = var.env_short
+  role_prefix                      = local.project
 }
 
 module "frontend" {

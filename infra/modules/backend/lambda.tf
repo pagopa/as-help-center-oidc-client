@@ -81,6 +81,17 @@ data "aws_iam_policy_document" "oidc_lambda" {
     ]
   }
   statement {
+    sid    = "KMSDecryptEncryptSessions"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:Encrypt",
+    ]
+    resources = [
+      var.kms_auth_session_table_alias_arn
+    ]
+  }
+  statement {
     sid    = "SSMGetParameters"
     effect = "Allow"
     actions = [

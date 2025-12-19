@@ -32,3 +32,8 @@ variable "oidc_lambda" {
     table_cac_oidc_auth_session_arn   = optional(string, "")
   })
 }
+
+variable "kms_auth_session_table_alias_arn" {
+  type        = string
+  description = "Kms key used to encrypt and decrypt auth session table."
+}
