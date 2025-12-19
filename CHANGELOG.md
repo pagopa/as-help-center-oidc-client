@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.28.0...v1.29.0) (2025-12-19)
+
+
+### Features
+
+* Enable server-side encryption for dynamodb table ([#37](https://github.com/pagopa/as-help-center-oidc-client/issues/37)) ([7329cc7](https://github.com/pagopa/as-help-center-oidc-client/commit/7329cc7663224df86dfca4242cf43642d10f1cbe))
+
 # [1.28.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.27.1...v1.28.0) (2025-12-19)
 
 
