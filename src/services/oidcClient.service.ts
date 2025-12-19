@@ -26,10 +26,10 @@ export function initializeClient() {
         response_types: ['code'],
       });
 
-      console.log('OIDC Client initialized successfully');
+      console.log('OIDC Client initialized successfully', `issuer: ${config.oidc.issuer}`);
     }
   } catch (error) {
-    console.error('OIDC Client initialization failed:', error);
+    console.error('OIDC Client initialization failed', `issuer: ${config.oidc.issuer}`, error);
     throw error;
   }
 }

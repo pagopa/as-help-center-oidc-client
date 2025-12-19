@@ -60,19 +60,16 @@ export async function loadParametersIntoEnv(): Promise<void> {
   const parameterPath = process.env.PARAMETER_STORE_PATH;
 
   try {
-    console.info(`[ParameterStore] Loading from path: ${parameterPath}`);
-
     if (!parameterPath) {
       throw new Error('PARAMETER_STORE_PATH is required');
     }
 
     const parameters = await fetchAllParametersByPath(parameterPath);
     populateEnvVariables(parameters);
-
-    console.info(`[ParameterStore] Loaded ${Object.keys(parameters).length} parameters`);
+    console.log(`Loaded ${Object.keys(parameters).length} parameters from ${parameterPath}`);
     loaded = true;
   } catch (err) {
-    console.error('[ParameterStore] Failed to load parameters', err);
+    console.error(`Failed to load parameters from ParameterStore (path ${parameterPath})`, err);
     throw err;
   }
 }

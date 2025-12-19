@@ -8,7 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { AccessTokenClaims, AuthSessionRecord } from 'src/types/auth.types';
 import { CallbackParamsType } from 'openid-client';
 import { sanitizedReturnTo } from '@utils/brandUtils';
-import { validateEmailDomain } from '@utils/utils';
+import { hashPII, validateEmailDomain } from '@utils/utils';
 import { ERROR_CODES } from '@utils/constants';
 
 export const generateAuthenticationUrlForLogin = async (returnTo: string, contactEmail: string): Promise<string> => {
@@ -31,7 +31,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
 
   // Manage provider errors
   if (error) {
-    console.error('OIDC Provider error:', error, error_description);
+    console.error('OIDC Provider error', error, error_description);
     throw new ApiError('Authorization failed', StatusCodes.BAD_REQUEST, ERROR_CODES.PROVIDER_ERROR);
   }
 
@@ -44,7 +44,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   try {
     authSessionRecord = await securityCheckManager.validateStateAndGetAuthSession(state);
   } catch (stateError) {
-    console.error('State validation error:', stateError);
+    console.error('State validation error', stateError);
     throw new ApiError('State validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
@@ -57,7 +57,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     });
     claims = tokenSet.claims;
   } catch (tokenExchangeError) {
-    console.error('Token exchange error:', tokenExchangeError);
+    console.error('Token exchange error', tokenExchangeError);
     throw new ApiError('Token exchange error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
@@ -65,7 +65,7 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
   try {
     securityCheckManager.validateNonce(authSessionRecord.nonce, claims.nonce);
   } catch (nonceError) {
-    console.error('Nonce validation error:', nonceError);
+    console.error('Nonce validation error', nonceError);
     throw new ApiError('Nonce validation error', StatusCodes.BAD_REQUEST, ERROR_CODES.AUTH_ERROR);
   }
 
@@ -76,6 +76,8 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     authSessionRecord.contact_email,
     claims.fiscalNumber,
   );
+
+  console.log('Login flow completed successfully', `emailHash: ${hashPII(authSessionRecord.contact_email)}`);
 
   // generate login form auto submit HTML
   return loginFormAutoSubmit(

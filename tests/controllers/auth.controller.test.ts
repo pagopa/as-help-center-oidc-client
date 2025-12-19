@@ -95,11 +95,10 @@ describe('auth.controller', () => {
 
       await logout(mockRequest as any, mockResponse as Response);
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith({
-        event: 'zendesk_login_error',
-        brand_id,
-        message,
-      });
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Zendesk login error during logout',
+        `brand_id: ${brand_id}, message: ${message}`,
+      );
       expect(sanitizeLogMessage).toHaveBeenCalledWith(message);
       expect(getErrorPageFromBrandId).toHaveBeenCalledWith(return_to);
       expect(mockResponse.redirect).toHaveBeenCalledWith(mockErrorPage);

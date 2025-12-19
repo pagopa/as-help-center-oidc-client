@@ -1,5 +1,6 @@
 import { has, isNil } from 'lodash';
 import dns from 'dns/promises';
+import crypto from 'crypto';
 
 export const sanitizeLogMessage = (rawMessage: unknown): string =>
   (typeof rawMessage === 'string' ? rawMessage : '').replace(/[\n\r]/g, '').slice(0, 500);
@@ -40,4 +41,8 @@ export const validateEmailDomain = async (email: string): Promise<boolean> => {
       return false;
     }
   }
+};
+
+export const hashPII = (value: string): string => {
+  return crypto.createHash('sha256').update(value).digest('hex').substring(0, 16);
 };
