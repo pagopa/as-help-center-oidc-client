@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import crypto from 'crypto';
 import { NODE_ENV_VALUES } from '@utils/constants';
 dotenv.config();
 
@@ -19,11 +18,6 @@ export default {
     jwtTokenOrganizationClaim: process.env.JWT_TOKEN_ORGANIZATION_CLAIM || 'users_hc_cac',
   },
 
-  stateJwt: {
-    secret: process.env.STATE_JWT_SECRET || crypto.randomBytes(16).toString('hex'),
-    expiring: Number(process.env.STATE_JWT_EXP) || 60 * 3, // 3m
-  },
-
   oidc: {
     issuer: process.env.OIDC_ISSUER ?? throwMissingRequiredEnvVar('OIDC_ISSUER'),
     clientId: process.env.OIDC_CLIENT_ID ?? throwMissingRequiredEnvVar('OIDC_CLIENT_ID'),
@@ -31,8 +25,8 @@ export default {
     scopes: buildOidcScopes(),
     responseType: process.env.OIDC_RESPONSE_TYPE || 'code',
     endpoints: {
-      authorize: process.env.OIDC_AUTHORIZE_ENDPOINT || '/oidc/authorize',
-      token: process.env.OIDC_TOKEN_ENDPOINT || 'login',
+      authorize: process.env.OIDC_AUTHORIZE_ENDPOINT || '/login',
+      token: process.env.OIDC_TOKEN_ENDPOINT || '/oidc/token',
       userinfo: process.env.OIDC_USERINFO_ENDPOINT || '/oidc/userinfo',
       jwks: process.env.OIDC_JWKS_ENDPOINT || '/oidc/keys',
     },
