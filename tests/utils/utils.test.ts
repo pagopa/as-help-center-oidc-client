@@ -1,4 +1,4 @@
-import { sanitizeLogMessage, validateRequiredFields, validateEmailDomain } from '@utils/utils';
+import { sanitizeLogMessage, validateRequiredFields, validateEmailDomain, hashPII } from '@utils/utils';
 import dns from 'dns/promises';
 
 jest.mock('dns/promises');
@@ -166,6 +166,42 @@ describe('utils', () => {
     it('should return false for emails without domain or with empty domain', async () => {
       expect(await validateEmailDomain('no-at-symbol')).toBe(false);
       expect(await validateEmailDomain('user@')).toBe(false);
+    });
+  });
+
+  describe('hashPII', () => {
+    it('should return a 16-character hash for any input', () => {
+      const result = hashPII('test@example.com');
+      expect(result).toHaveLength(16);
+      expect(typeof result).toBe('string');
+    });
+
+    it('should return consistent hash for the same input', () => {
+      const input = 'user@pagopa.it';
+      const hash1 = hashPII(input);
+      const hash2 = hashPII(input);
+      expect(hash1).toBe(hash2);
+    });
+
+    it('should return different hashes for different inputs', () => {
+      const hash1 = hashPII('user1@pagopa.it');
+      const hash2 = hashPII('user2@pagopa.it');
+      expect(hash1).not.toBe(hash2);
+    });
+
+    it('should hash empty string', () => {
+      const result = hashPII('');
+      expect(result).toHaveLength(16);
+      expect(result).toBe('e3b0c44298fc1c14'); // Known SHA-256 hash of empty string (first 16 chars)
+    });
+
+    it('should be irreversible (one-way hash)', () => {
+      const original = 'sensitive@email.com';
+      const hashed = hashPII(original);
+      // Hash should not contain the original value
+      expect(hashed).not.toContain('@');
+      expect(hashed).not.toContain('email');
+      expect(hashed).not.toContain('sensitive');
     });
   });
 });

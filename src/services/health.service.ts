@@ -15,7 +15,7 @@ export const healthCheck = (): HealthCheckResponse => {
       uptime: process.uptime(),
     };
   } catch (error: unknown) {
-    console.error('Health check error:', error);
+    console.error('Health check error', error);
     const apiError = new ApiError('Unable to get server status', StatusCodes.SERVICE_UNAVAILABLE);
     apiError.setIsRedirect(false);
     throw apiError;
