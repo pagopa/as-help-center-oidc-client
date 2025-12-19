@@ -35,7 +35,7 @@ export const logout = async (req: Request<{}, {}, {}, LogoutReqParam>, res: Resp
     // in case of Zendesk error while processing a JWT login request (such as clock drifts, rate limits being hit, and invalid tokens), it redirects to logout URL and passes a message and a kind (error) parameter. Most of the errors that can happen are ones that you'll want to fix.
     console.error(
       'Zendesk login error during logout',
-      `brand_id: ${req.query.brand_id}, message: ${sanitizeLogMessage(req.query.message)}`,
+      `brand_id: ${sanitizeLogMessage(req.query.brand_id)}, message: ${sanitizeLogMessage(req.query.message)}`,
     );
     // simply logout and redirect to the return_to parameter if specified or a generic return_to
     res.redirect(getErrorPageFromBrandId(req.query.return_to));
