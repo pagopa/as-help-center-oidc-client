@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.27.1...v1.28.0) (2025-12-19)
+
+
+### Features
+
+* logs ([#36](https://github.com/pagopa/as-help-center-oidc-client/issues/36)) ([1a8651e](https://github.com/pagopa/as-help-center-oidc-client/commit/1a8651ea10bbf9433a225d48e47d2f98313a9436))
+
 ## [1.27.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.27.0...v1.27.1) (2025-12-17)
 
 
