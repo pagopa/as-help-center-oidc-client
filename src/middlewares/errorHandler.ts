@@ -5,10 +5,11 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { ERROR_CODES } from '@utils/constants';
 import { ZodError } from 'zod';
 import { isEmpty } from 'lodash';
+import { sanitizeLogMessage } from '@utils/utils';
 
 const printError = (error: unknown, path?: string, envValues: Array<string> = []) => {
   if (isEmpty(envValues) || envValues.includes(env.server.environment)) {
-    console.error('Error', error, path ? `Path: ${path}` : '');
+    console.error('Error', error, path ? `Path: ${sanitizeLogMessage(path)}` : '');
   }
 };
 
