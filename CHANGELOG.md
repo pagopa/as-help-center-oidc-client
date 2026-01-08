@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.29.0...v1.30.0) (2026-01-08)
+
+
+### Features
+
+* **CACI-499:** remove 'TINIT-' prefix from fiscalNumber when present ([#38](https://github.com/pagopa/as-help-center-oidc-client/issues/38)) ([ca8179a](https://github.com/pagopa/as-help-center-oidc-client/commit/ca8179a407bfb1681a0133e7d6b716174ce56d7a))
+
 # [1.29.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.28.0...v1.29.0) (2025-12-19)
 
 
