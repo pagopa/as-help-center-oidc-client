@@ -80,5 +80,29 @@ describe('jwtAuth.service', () => {
 
       expect(mockJwtSign).toHaveBeenCalledWith(expect.any(Object), config.authJwt.secret, expect.any(Object));
     });
+
+    it("should strip 'TINIT-' prefix from fiscalNumber when present", () => {
+      const name = 'Luigi Bianchi';
+      const fiscalNumber = 'TINIT-RSSMRA80A01H501U';
+      const org = 'Other Org';
+      const emailContact = 'luigi.bianchi@example.com';
+
+      generateAuthJwt(name, org, emailContact, fiscalNumber);
+
+      expect(mockJwtSign).toHaveBeenCalledWith(
+        {
+          iat: 1609459200,
+          jti: 'mocked-uuid-v4',
+          name: name,
+          email: emailContact,
+          organization: org,
+          user_fields: { aux_data: 'RSSMRA80A01H501U' },
+        },
+        config.authJwt.secret,
+        {
+          algorithm: 'HS256',
+        },
+      );
+    });
   });
 });
