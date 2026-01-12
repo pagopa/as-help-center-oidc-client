@@ -4,6 +4,7 @@ import * as oidcClient from '@services/oidcClient.service';
 import routes from './routes';
 import { errorHandler } from '@middlewares/errorHandler';
 import { notFoundHandler } from '@middlewares/notFoundHandler';
+import { securityHeaders } from '@middlewares/securityHeaders';
 
 const app = express();
 
@@ -11,6 +12,9 @@ const app = express();
 export function initializeApp(): void {
   // oidc client
   oidcClient.initializeClient();
+
+  // security headers
+  app.use(securityHeaders);
 
   // api response type middlewares
   app.use(express.urlencoded({ extended: true }));
