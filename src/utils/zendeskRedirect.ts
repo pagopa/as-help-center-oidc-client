@@ -28,10 +28,26 @@ const spinnerStyles = `
     margin-top: 20px;
   }`;
 
+// Escape HTML special characters to prevent XSS attacks
+const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken: string, returnToUrl: string) => {
   if (isEmpty(loginActionEndpoint) || isEmpty(jwtAccessToken) || isEmpty(returnToUrl)) {
     throw new Error('Invalid parameters provided to loginFormAutoSubmit');
   }
+
+  // Escape all user-controlled values to prevent XSS
+  const safeEndpoint = escapeHtml(loginActionEndpoint);
+  const safeJwt = escapeHtml(jwtAccessToken);
+  const safeReturnTo = escapeHtml(returnToUrl);
+
   return `
     <html>
       <head>
@@ -41,9 +57,9 @@ export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken:
       </head>
       <body>
         <div class="spinner"></div>
-        <form id="jwtForm" method="POST" action="${loginActionEndpoint}">
-          <input id="jwtString" type="hidden" name="jwt" value="${jwtAccessToken}" />
-          <input id="returnTo" type="hidden" name="return_to" value="${returnToUrl}" />
+        <form id="jwtForm" method="POST" action="${safeEndpoint}">
+          <input id="jwtString" type="hidden" name="jwt" value="${safeJwt}" />
+          <input id="returnTo" type="hidden" name="return_to" value="${safeReturnTo}" />
         </form>
         <script>window.onload = () => { document.forms["jwtForm"].submit() }</script>
       </body>
