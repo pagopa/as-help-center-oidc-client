@@ -1,3 +1,10 @@
+# [1.32.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.31.1...v1.32.0) (2026-01-13)
+
+
+### Features
+
+* **security:** helmet security header + csp nonce ([#41](https://github.com/pagopa/as-help-center-oidc-client/issues/41)) ([ab453f1](https://github.com/pagopa/as-help-center-oidc-client/commit/ab453f11d16264f5732bf78494d24aee4785ecdd))
+
 ## [1.31.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.31.0...v1.31.1) (2026-01-13)
 
 
