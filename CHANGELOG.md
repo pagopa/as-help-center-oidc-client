@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.30.0...v1.31.0) (2026-01-13)
+
+
+### Features
+
+* Set request rate limit for api ([#39](https://github.com/pagopa/as-help-center-oidc-client/issues/39)) ([2ef385d](https://github.com/pagopa/as-help-center-oidc-client/commit/2ef385dcec041f51b0973fd7b88eaa1c23fb4b5c))
+
 # [1.30.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.29.0...v1.30.0) (2026-01-08)
 
 
