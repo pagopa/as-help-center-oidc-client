@@ -91,7 +91,7 @@ variable "api_method_settings" {
       logging_level   = "ERROR"
     },
     {
-      method_path            = "*/login/*"
+      method_path            = "/auth/login/GET"
       caching_enabled        = false
       metrics_enabled        = true
       logging_level          = "INFO"
@@ -99,12 +99,12 @@ variable "api_method_settings" {
       throttling_burst_limit = 10 # 10 burst capacity for login in prod
     },
     {
-      method_path            = "*/callback/*"
+      method_path            = "/auth/callback/GET"
       caching_enabled        = false
       metrics_enabled        = true
       logging_level          = "INFO"
-      throttling_rate_limit  = 10 # 10 requests per second for login
-      throttling_burst_limit = 20 # 20 burst capacity for login
+      throttling_rate_limit  = 5  # 5 requests per second for callback in prod (more restrictive)
+      throttling_burst_limit = 10 # 10 burst capacity for callback in prod
     }
   ]
 }
