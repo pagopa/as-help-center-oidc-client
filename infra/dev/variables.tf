@@ -89,6 +89,22 @@ variable "api_method_settings" {
       caching_enabled = false
       metrics_enabled = true
       logging_level   = "ERROR"
+    },
+    {
+      method_path            = "/auth/login/GET"
+      caching_enabled        = false
+      metrics_enabled        = true
+      logging_level          = "INFO"
+      throttling_rate_limit  = 10 # 10 requests per second for login
+      throttling_burst_limit = 20 # 20 burst capacity for login
+    },
+    {
+      method_path            = "/auth/callback/GET"
+      caching_enabled        = false
+      metrics_enabled        = true
+      logging_level          = "INFO"
+      throttling_rate_limit  = 10 # 10 requests per second for callback
+      throttling_burst_limit = 20 # 20 burst capacity for callback
     }
   ]
 }
