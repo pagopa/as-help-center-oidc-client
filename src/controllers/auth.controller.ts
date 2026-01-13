@@ -25,7 +25,8 @@ export const callback = async (req: Request<{}, {}, {}, CallbackReqParam>, res: 
   // extract callback request params
   const params = oidcClient.extractCallbackParams(req);
   // handle login callback and generate login auto submit form
-  const loginFormAutoSubmit = await authService.handleLoginCallbackAndGenerateAutoSubmitForm(params);
+  const nonce = res.locals && res.locals.cspNonce ? res.locals.cspNonce : undefined;
+  const loginFormAutoSubmit = await authService.handleLoginCallbackAndGenerateAutoSubmitForm(params, nonce);
 
   res.send(loginFormAutoSubmit);
 };

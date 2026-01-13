@@ -105,9 +105,33 @@ describe('auth.service', () => {
         config.authJwt.loginActionEndpoint,
         mockJwtToken,
         mockStatePayload.return_to_url,
+        undefined,
       );
       expect(result).toBe(mockHtmlForm);
       // Note: state is atomically deleted during validateStateAndGetAuthSession to prevent replay attacks
+    });
+
+    it('should forward provided nonce to loginFormAutoSubmit', async () => {
+      const providedNonce = 'request-nonce-123';
+      const mockJwtToken = 'generated.jwt.token';
+      const mockHtmlForm = '<html>...</html>';
+
+      (securityCheckManager.validateStateAndGetAuthSession as jest.Mock).mockResolvedValue(mockStatePayload);
+      (oidcClient.handleCallback as jest.Mock).mockResolvedValue({ claims: mockClaims });
+      (securityCheckManager.validateNonce as jest.Mock).mockReturnValue(undefined);
+      (JwtAuthService.generateAuthJwt as jest.Mock).mockReturnValue(mockJwtToken);
+      (loginFormAutoSubmit as jest.Mock).mockReturnValue(mockHtmlForm);
+
+      const result = await authService.handleLoginCallbackAndGenerateAutoSubmitForm(mockParams, providedNonce);
+
+      expect(loginFormAutoSubmit).toHaveBeenCalledWith(
+        config.authJwt.loginActionEndpoint,
+        mockJwtToken,
+        mockStatePayload.return_to_url,
+        providedNonce,
+      );
+
+      expect(result).toBe(mockHtmlForm);
     });
 
     it('should throw ApiError when provider returns error', async () => {

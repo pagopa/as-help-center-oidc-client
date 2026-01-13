@@ -65,10 +65,16 @@ describe('auth.controller', () => {
       const mockHtmlForm = '<html>...</html>';
       (authService.handleLoginCallbackAndGenerateAutoSubmitForm as jest.Mock).mockResolvedValue(mockHtmlForm);
 
+      // simulate middleware that sets res.locals.cspNonce
+      (mockResponse as any).locals = { cspNonce: 'test-nonce-456' };
+
       await callback(mockRequest as any, mockResponse as Response);
 
       expect(oidcClient.extractCallbackParams).toHaveBeenCalledWith(mockRequest);
-      expect(authService.handleLoginCallbackAndGenerateAutoSubmitForm).toHaveBeenCalledWith(mockParams);
+      expect(authService.handleLoginCallbackAndGenerateAutoSubmitForm).toHaveBeenCalledWith(
+        mockParams,
+        'test-nonce-456',
+      );
       expect(mockResponse.send).toHaveBeenCalledWith(mockHtmlForm);
       expect(mockResponse.send).toHaveBeenCalledTimes(1);
     });
