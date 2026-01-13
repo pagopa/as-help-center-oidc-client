@@ -1,3 +1,10 @@
+## [1.31.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.31.0...v1.31.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* Set correct method path rate limit ([#40](https://github.com/pagopa/as-help-center-oidc-client/issues/40)) ([0654830](https://github.com/pagopa/as-help-center-oidc-client/commit/06548300777278c22fc864916d968e35e7fd3207))
+
 # [1.31.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.30.0...v1.31.0) (2026-01-13)
 
 
