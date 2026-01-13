@@ -21,7 +21,7 @@ describe('zendeskRedirect', () => {
 
     it('should include spinner styles in head and spinner div in body', () => {
       const result = loginFormAutoSubmit(loginActionEndpoint, jwtAccessToken, returnToUrl);
-      expect(result).toContain('<style>');
+      expect(result).toContain('<style nonce="">');
       expect(result).toContain('.spinner');
       expect(result).toContain('animation: spin 1s linear infinite');
       expect(result).toContain('@keyframes spin');
@@ -53,7 +53,27 @@ describe('zendeskRedirect', () => {
 
     it('should include auto-submit script', () => {
       const result = loginFormAutoSubmit(loginActionEndpoint, jwtAccessToken, returnToUrl);
-      expect(result).toContain('<script>window.onload = () => { document.forms["jwtForm"].submit() }</script>');
+      expect(result).toContain(
+        `<script nonce="">window.onload = () => { document.forms["jwtForm"].submit() }</script>`,
+      );
+    });
+
+    it('should include nonce attribute in script and style when provided', () => {
+      const nonce = 'abc123nonce';
+      const result = loginFormAutoSubmit(loginActionEndpoint, jwtAccessToken, returnToUrl, nonce);
+      expect(result).toContain(
+        `<script nonce="${nonce}">window.onload = () => { document.forms["jwtForm"].submit() }</script>`,
+      );
+      expect(result).toContain(`<style nonce="${nonce}">`);
+    });
+
+    it('should escape nonce when it contains special characters', () => {
+      const maliciousNonce = 'bad"onmouseover="alert(1)';
+      const result = loginFormAutoSubmit(loginActionEndpoint, jwtAccessToken, returnToUrl, maliciousNonce);
+      // nonce attribute should be escaped
+      expect(result).toContain('nonce="bad&quot;onmouseover=&quot;alert(1)"');
+      // script tag should contain the escaped nonce attribute
+      expect(result).toContain(`<script nonce="bad&quot;onmouseover=&quot;alert(1)">`);
     });
 
     it('should have correct input names', () => {
