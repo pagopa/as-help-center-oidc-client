@@ -5,6 +5,7 @@ import routes from './routes';
 import { errorHandler } from '@middlewares/errorHandler';
 import { notFoundHandler } from '@middlewares/notFoundHandler';
 import { securityHeaders } from '@middlewares/securityHeaders';
+import { generateCspNonce } from '@middlewares/cspNonce';
 
 const app = express();
 
@@ -13,7 +14,8 @@ export function initializeApp(): void {
   // oidc client
   oidcClient.initializeClient();
 
-  // security headers
+  app.use(generateCspNonce);
+  // Security headers (including CSP with nonce)
   app.use(securityHeaders);
 
   // api response type middlewares

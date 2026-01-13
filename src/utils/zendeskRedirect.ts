@@ -37,8 +37,12 @@ const escapeHtml = (unsafe: string): string => {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 };
-
-export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken: string, returnToUrl: string) => {
+export const loginFormAutoSubmit = (
+  loginActionEndpoint: string,
+  jwtAccessToken: string,
+  returnToUrl: string,
+  nonce?: string,
+) => {
   if (isEmpty(loginActionEndpoint) || isEmpty(jwtAccessToken) || isEmpty(returnToUrl)) {
     throw new Error('Invalid parameters provided to loginFormAutoSubmit');
   }
@@ -47,11 +51,12 @@ export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken:
   const safeEndpoint = escapeHtml(loginActionEndpoint);
   const safeJwt = escapeHtml(jwtAccessToken);
   const safeReturnTo = escapeHtml(returnToUrl);
+  const nonceAttr = nonce ? escapeHtml(nonce) : '';
 
   return `
     <html>
       <head>
-        <style>
+        <style nonce="${nonceAttr}">
           ${spinnerStyles}
         </style>
       </head>
@@ -61,7 +66,7 @@ export const loginFormAutoSubmit = (loginActionEndpoint: string, jwtAccessToken:
           <input id="jwtString" type="hidden" name="jwt" value="${safeJwt}" />
           <input id="returnTo" type="hidden" name="return_to" value="${safeReturnTo}" />
         </form>
-        <script>window.onload = () => { document.forms["jwtForm"].submit() }</script>
+        <script nonce="${nonceAttr}">window.onload = () => { document.forms["jwtForm"].submit() }</script>
       </body>
     </html>
   `;

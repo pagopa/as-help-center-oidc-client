@@ -26,7 +26,10 @@ export const generateAuthenticationUrlForLogin = async (returnTo: string, contac
   return oidcClient.generateAuthUrl(state, nonce);
 };
 
-export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParams: CallbackParamsType) => {
+export const handleLoginCallbackAndGenerateAutoSubmitForm = async (
+  callbackParams: CallbackParamsType,
+  nonce?: string,
+) => {
   const { state, code, error, error_description } = callbackParams;
 
   // Manage provider errors
@@ -84,5 +87,6 @@ export const handleLoginCallbackAndGenerateAutoSubmitForm = async (callbackParam
     config.authJwt.loginActionEndpoint,
     jwtAccess,
     sanitizedReturnTo(authSessionRecord.return_to_url),
+    nonce,
   );
 };
