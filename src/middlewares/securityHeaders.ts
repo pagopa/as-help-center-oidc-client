@@ -1,5 +1,6 @@
 import helmet from 'helmet';
 import type { Response } from 'express';
+import config from '@config/env';
 
 // Security headers middleware using Helmet configuring headers to protect against common vulnerabilities
 export const securityHeaders = helmet({
@@ -25,7 +26,7 @@ export const securityHeaders = helmet({
       frameAncestors: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
-      formAction: ["'self'", 'https://*.zendesk.com'],
+      formAction: ["'self'", ...getCSPFormActionDomains()],
     },
   },
 
@@ -48,3 +49,24 @@ export const securityHeaders = helmet({
   crossOriginOpenerPolicy: false,
   crossOriginResourcePolicy: false,
 });
+
+function getCSPFormActionDomains(): string[] {
+  const domains: string[] = [];
+  domains.push(extractOrigin(config.cac.pagopaUrl, 'https://assistenza.pagopa.gov.it'));
+  domains.push(extractOrigin(config.cac.ioUrl, 'https://assistenza.ioapp.it'));
+  domains.push(extractOrigin(config.cac.sendUrl, 'https://assistenza.notifichedigitali.it'));
+  domains.push(extractOrigin(config.authJwt.loginActionEndpoint, 'https://pagopa.zendesk.com'));
+  return domains.filter((d) => d !== '');
+}
+
+function extractOrigin(raw: string, fallback: string = ''): string {
+  if (!raw || raw.trim() === '' || !raw.startsWith('https://')) {
+    return fallback;
+  }
+  try {
+    const u = new URL(raw.trim());
+    return u.origin;
+  } catch {
+    throw new Error(`Invalid URL provided for csp: ${raw}`);
+  }
+}

@@ -1,3 +1,18 @@
+<p align="center">
+   <img src="https://img.shields.io/github/v/release/pagopa/as-help-center-oidc-client" />
+   <img src="https://img.shields.io/github/contributors-anon/pagopa/as-help-center-oidc-client" />
+   <img src="https://img.shields.io/github/repo-size/pagopa/as-help-center-oidc-client" />
+</p>
+
+<p align="center">
+   <a href="https://github.com/pagopa/as-help-center-oidc-client/actions/workflows/deploy-lambda-cac-oidc-client.yml">
+      <img src="https://github.com/pagopa/as-help-center-oidc-client/actions/workflows/deploy-lambda-cac-oidc-client.yml/badge.svg?branch=main" />
+   </a>
+   <a href="https://github.com/pagopa/as-help-center-oidc-client/actions/workflows/terraform-apply.yml">
+      <img src="https://github.com/pagopa/as-help-center-oidc-client/actions/workflows/terraform-apply.yml/badge.svg?branch=main" />
+   </a>
+</p>
+
 # as-help-center-oidc-client
 
 1. [What is?](#what-is)

@@ -35,7 +35,7 @@ export default {
   cac: {
     // urls
     homeUrl: process.env.CAC_HOME_URL || 'https://centroassistenza.pagopa.it/hc/it',
-    ioUrl: process.env.CAC_IO_URL || 'https://assistenza.pagopa.gov.it/hc/it',
+    ioUrl: process.env.CAC_IO_URL || 'https://assistenza.ioapp.it/hc/it',
     sendUrl: process.env.CAC_SEND_URL || 'https://assistenza.notifichedigitali.it/hc/it',
     pagopaUrl: process.env.CAC_PAGOPA_URL || 'https://assistenza.pagopa.gov.it/hc/it',
     // brand ids
