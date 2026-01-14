@@ -1,3 +1,10 @@
+## [1.32.1](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.32.0...v1.32.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* csp domains for login form action ([#42](https://github.com/pagopa/as-help-center-oidc-client/issues/42)) ([a4a75a0](https://github.com/pagopa/as-help-center-oidc-client/commit/a4a75a0efc661142636ba81494c0c104f27137dc))
+
 # [1.32.0](https://github.com/pagopa/as-help-center-oidc-client/compare/v1.31.1...v1.32.0) (2026-01-13)
 
 
